@@ -12,8 +12,9 @@ import {
   starSprite,
   vestaTexture,
 } from "./textures";
+import { createSun } from "./sun";
 
-export type BodyKind = "earth" | "moon" | "mars" | "vesta" | "europa" | "saturn";
+export type BodyKind = "earth" | "moon" | "mars" | "vesta" | "europa" | "saturn" | "sun";
 
 interface Body {
   group: THREE.Group;
@@ -26,6 +27,8 @@ interface Body {
   drop: number;
   /** Хэсгийн төгсгөлд доошоо живж алс руу холдоно */
   recede?: boolean;
+  /** Хэсгийн явцыг хэр хурдан ойртолт болгох (их бол эрт ойртоно) */
+  reach?: number;
   tick?: (dt: number, p: number) => void;
 }
 
@@ -333,6 +336,15 @@ export class Space {
       Object.assign(body, { far: 80, near: 22 });
     }
 
+    if (kind === "sun") {
+      const sun = createSun(5);
+      group.add(sun.group);
+      body.spin.push([sun.surface, 0.02]);
+      body.tick = () => sun.update(this.reduced ? 0 : this.clock.elapsedTime);
+      // Сүүлийн хэсэг тул хуудасны төгсгөлд хүрэхэд бүрэн ойртсон байна
+      Object.assign(body, { far: 160, near: 24, reach: 2.1 });
+    }
+
     this.scene.add(group);
     return body;
   }
@@ -406,7 +418,7 @@ export class Space {
         ? leave > 0
           ? THREE.MathUtils.lerp(body.near, 200, leave)
           : THREE.MathUtils.lerp(body.far, body.near, smooth(clamp01(p / 0.22)))
-        : THREE.MathUtils.lerp(body.far, body.near, smooth(clamp01(p * 1.25)));
+        : THREE.MathUtils.lerp(body.far, body.near, smooth(clamp01(p * (body.reach ?? 1.25))));
 
       // Элементийн дэлгэц дээрх төвийг 3D орон зайд буулгана
       // Холдох бие дээшээ гүйхгүй: дэлгэцийн голоос дээш гарахгүй, төгсгөлд доошоо живнэ

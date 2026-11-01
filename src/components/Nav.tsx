@@ -66,7 +66,7 @@ export function Nav() {
       </header>
 
       <div ref={menu} className="invisible fixed inset-0 z-[50] overflow-y-auto bg-space/95 px-5 pb-10 pt-28 backdrop-blur md:px-10">
-        <p className="fp-item mb-8 text-ink/60">Ten stops from Ulaanbaatar to the edge of the solar system.</p>
+        <p className="fp-item mb-8 text-ink/60">Ten stops from Ulaanbaatar out to the edge of the solar system, then home to the Sun.</p>
         <ol className="max-w-3xl">
           {stops.map(s => (
             <li key={s.id} className="fp-item border-t border-ink/15">

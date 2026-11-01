@@ -103,7 +103,7 @@ export const stops: Stop[] = [
   { id: "europa", place: "Europa", km: 628_000_000 },
   { id: "saturn", place: "Saturn", km: 1_270_000_000 },
   { id: "deep", place: "Deep field", km: 4_500_000_000 },
-  { id: "signal", place: "Voyager 1", km: 24_900_000_000 },
+  { id: "signal", place: "The Sun", km: 149_600_000 },
 ];
 
 export const stack: StackGroup[] = [

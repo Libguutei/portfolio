@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { gsap, useGSAP } from "@/lib/gsap";
 import { scrollTo } from "@/lib/scroll";
 import { profile, socials } from "@/data/portfolio";
 import { StopLabel } from "../StopLabel";
@@ -14,10 +15,23 @@ function useClock(timeZone: string): string {
   return time;
 }
 
-/** Voyager 1-ийн зайнаас: дохио илгээх — холбоо барих хэсэг */
+/** Аяллын төгсгөл: нар руу ниснэ, дэлгэц дулаан гэрэлд автна — холбоо барих хэсэг */
 export function Signal() {
+  const root = useRef<HTMLElement>(null);
   const time = useClock(profile.timeZone);
   const [copied, setCopied] = useState(false);
+
+  // Нар ойртох тусам дэлгэц нарны гэрэлд автна
+  useGSAP(
+    () => {
+      gsap.fromTo(
+        ".sg-light",
+        { opacity: 0 },
+        { opacity: 1, ease: "none", scrollTrigger: { trigger: root.current, start: "top 80%", end: "bottom bottom", scrub: true } },
+      );
+    },
+    { scope: root },
+  );
 
   const copyEmail = async () => {
     try {
@@ -30,14 +44,20 @@ export function Signal() {
   };
 
   return (
-    <section id="signal" className="relative px-5 pb-10 pt-32 md:px-10 md:pt-44">
-      <div className="grid gap-16 md:grid-cols-12">
-        <div className="md:col-span-7">
+    <section id="signal" ref={root} className="relative px-5 pb-10 pt-32 md:px-10 md:pb-32 md:pt-44">
+      <div
+        className="sg-light pointer-events-none fixed inset-0 -z-[1] opacity-0"
+        style={{ background: "radial-gradient(ellipse 70% 80% at 75% 45%, rgb(255 160 70 / 0.28), rgb(255 110 40 / 0.1) 50%, transparent 78%)" }}
+        aria-hidden
+      />
+
+      <div className="grid gap-16 md:min-h-[80svh] md:grid-cols-12">
+        <div className="relative z-10 self-center md:col-span-6">
           <StopLabel id="signal" />
           <h2 className="mt-10 font-display text-[clamp(2.6rem,7vw,7rem)] font-extrabold leading-[0.98]">Send a signal</h2>
-          <p className="measure mt-6 text-lg text-ink/80">
-            A message from Voyager 1 takes almost a day to reach Earth. Mine reach Ulaanbaatar a lot faster. I'm open to junior roles,
-            internships and interesting side projects.
+          <p className="measure mt-6 text-lg text-ink/85">
+            The last stop is the Sun. Its light needs eight minutes to reach Ulaanbaatar; an email to me gets there faster. I'm
+            open to junior roles, internships and interesting side projects.
           </p>
 
           <div className="mt-12 flex flex-wrap items-center gap-4">
@@ -46,7 +66,11 @@ export function Signal() {
                 Email me
               </a>
             </Magnetic>
-            <button onClick={copyEmail} className="rounded-full border border-ink/40 px-6 py-4 transition-colors hover:border-ink" aria-live="polite">
+            <button
+              onClick={copyEmail}
+              className="rounded-full border border-ink/40 bg-space/30 px-6 py-4 backdrop-blur transition-colors hover:border-ink"
+              aria-live="polite"
+            >
               {copied ? "Address copied" : `Copy ${profile.email}`}
             </button>
           </div>
@@ -62,19 +86,14 @@ export function Signal() {
           </ul>
         </div>
 
-        {/* Дохионы долгион */}
-        <div className="relative hidden aspect-square w-full max-w-[420px] self-center justify-self-center md:col-span-5 md:block" aria-hidden>
-          {[0, 1.2, 2.4].map(d => (
-            <span key={d} className="signal-ring" style={{ animationDelay: `${d}s` }} />
-          ))}
-          <span className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-dawn shadow-[0_0_24px_#ffc46b]" />
-        </div>
+        {/* Нар энэ хайрцгийн төвд — 3D (three/Space.ts) */}
+        <div data-body="sun" className="h-[50svh] md:col-span-6 md:h-auto" aria-hidden />
       </div>
 
-      <footer className="mt-40 flex flex-wrap items-end justify-between gap-6 border-t border-ink/15 pt-8 text-sm text-ink/60">
+      <footer className="relative z-10 mt-32 flex flex-wrap items-end justify-between gap-6 border-t border-ink/20 pt-8 text-sm text-ink/70">
         <div className="flex items-center gap-3">
           <span className="h-1.5 w-1.5 rounded-full bg-sky shadow-[0_0_8px_#3d7bff]" aria-hidden />
-          That pale blue dot is home. It's {time} in Ulaanbaatar.
+          Home is the pale blue dot behind us. It's {time} in Ulaanbaatar.
         </div>
         <div className="flex items-center gap-6">
           <span>© {new Date().getFullYear()} {profile.name}</span>
