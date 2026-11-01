@@ -560,3 +560,15 @@ html.has-cursor * {
     height: 4px;
   }
 }
+
+/* ---------- Device frames ---------- */
+.device-phone,
+.device-browser {
+  transition: rotate 0.8s cubic-bezier(0.19, 1, 0.22, 1), scale 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.device-phone:hover,
+.device-browser:hover {
+  rotate: 0deg;
+  scale: 1.04;
+}

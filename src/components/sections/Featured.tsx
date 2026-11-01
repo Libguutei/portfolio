@@ -5,6 +5,7 @@ import { SplitReveal } from "../motion/SplitReveal";
 import { Magnetic } from "../motion/Magnetic";
 import { RollText } from "../motion/RollText";
 import { FeaturedVisualView } from "./FeaturedVisuals";
+import { DeviceFrame } from "../DeviceFrame";
 
 /**
  * Том төслүүд: desktop дээр pin хийгдээд бүтэн дэлгэцийн панелууд
@@ -155,8 +156,23 @@ export function Featured() {
                 </div>
               </div>
 
-              <div className="ft-visual h-[48svh] md:col-span-6 md:h-[78svh]">
-                <FeaturedVisualView type={p.visual} />
+              <div className="ft-visual relative h-[48svh] md:col-span-6 md:h-[78svh]">
+                {p.shot?.device === "browser" ? (
+                  <div className="flex h-full items-center justify-center">
+                    <DeviceFrame shot={p.shot} alt={`${p.title} screenshot`} className="ft-device w-full max-w-[640px] -rotate-2" />
+                  </div>
+                ) : (
+                  <>
+                    <FeaturedVisualView type={p.visual} />
+                    {p.shot && (
+                      <DeviceFrame
+                        shot={p.shot}
+                        alt={`${p.title} screenshot`}
+                        className="ft-device absolute bottom-[4%] right-0 w-[34%] max-w-[210px] rotate-6 md:right-[2%]"
+                      />
+                    )}
+                  </>
+                )}
               </div>
             </div>
           </article>

@@ -4,6 +4,7 @@ import { hardware } from "@/data/portfolio";
 import { SplitReveal } from "../motion/SplitReveal";
 import { Magnetic } from "../motion/Magnetic";
 import { RollText } from "../motion/RollText";
+import { DeviceFrame } from "../DeviceFrame";
 
 const DRINK_ML = 350;
 
@@ -106,6 +107,16 @@ export function Hardware() {
         scrollTrigger: { trigger: root.current, start: "top 60%" },
       });
 
+      gsap.from(".hw-phone", {
+        y: 180,
+        rotate: 24,
+        opacity: 0,
+        duration: 1.6,
+        delay: 0.2,
+        ease: "expo.out",
+        scrollTrigger: { trigger: root.current, start: "top 55%" },
+      });
+
       gsap.from(".hw-stat", {
         yPercent: 60,
         opacity: 0,
@@ -139,8 +150,13 @@ export function Hardware() {
 
       <div className="hw-story grid gap-16 md:grid-cols-2 md:gap-10">
         <div className="md:sticky md:top-[14vh] md:h-[72vh] md:self-start">
-          <div className="flex h-full items-center">
+          <div className="relative flex h-full items-center">
             <Coaster mlRef={ml} />
+            <DeviceFrame
+              shot={hardware.shot}
+              alt="Дусал app screenshot"
+              className="hw-phone absolute bottom-0 right-0 w-[34%] max-w-[190px] rotate-6"
+            />
           </div>
         </div>
 

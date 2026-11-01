@@ -37,10 +37,16 @@ function ProjectCard({ project }: { project: Project }) {
       >
         <div className="pj-media relative flex-1 overflow-hidden">
           <div className="pj-media-inner absolute -inset-x-[20%] inset-y-0">
-            <div className="pj-art absolute inset-0" />
-            <div className="pj-orb pj-orb-1" />
-            <div className="pj-orb pj-orb-2" />
-            <div className="pj-rings" />
+            {project.image ? (
+              <img src={project.image} alt={`${project.title} screenshot`} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+            ) : (
+              <>
+                <div className="pj-art absolute inset-0" />
+                <div className="pj-orb pj-orb-1" />
+                <div className="pj-orb pj-orb-2" />
+                <div className="pj-rings" />
+              </>
+            )}
           </div>
           <span className="pj-num absolute -bottom-[0.18em] left-4 font-display text-[30vw] font-black leading-none md:text-[14vw]">
             {project.id}
