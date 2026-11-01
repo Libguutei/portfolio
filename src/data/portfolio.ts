@@ -81,85 +81,84 @@ export interface Social {
 
 export const profile: Profile = {
   name: "Bilguuntogs",
-  role: "Junior developer",
+  role: "Junior хөгжүүлэгч",
   age: 20,
-  experience: "1 year",
-  location: "Ulaanbaatar, Mongolia",
+  experience: "1 жил",
+  location: "Улаанбаатар, Монгол",
   timeZone: "Asia/Ulaanbaatar",
   email: "hello@example.com",
   github: "Libguutei",
   intro:
-    "Junior developer, 20, one year in. Scroll to lift off and fly past the projects I've launched.",
+    "20 настай junior хөгжүүлэгч, ажиллаад нэг жил болж байна. Доош гүйлгээд миний хийсэн төслүүдийн хажуугаар нисээрэй.",
   about:
-    "I build full-stack apps with React, Next.js and TypeScript, and lately the hardware they talk to.",
+    "React, Next.js, TypeScript ашиглан full-stack апп хийдэг. Сүүлийн үед тэдгээртэй холбогддог төхөөрөмж ч бүтээж байна.",
 };
 
 /** Аяллын дараалал — DOM дахь section-уудын id-тай таарна */
 export const stops: Stop[] = [
-  { id: "launch", place: "Ulaanbaatar", km: 0 },
-  { id: "about", place: "Above the clouds", km: 10 },
-  { id: "orbit", place: "Low Earth orbit", km: 400 },
-  { id: "moon", place: "The Moon", km: 384_400 },
-  { id: "mars", place: "Mars", km: 225_000_000 },
-  { id: "belt", place: "Asteroid belt", km: 350_000_000 },
-  { id: "rocks", place: "Deeper in the belt", km: 420_000_000 },
-  { id: "europa", place: "Europa", km: 628_000_000 },
-  { id: "saturn", place: "Saturn", km: 1_270_000_000 },
-  { id: "deep", place: "Deep field", km: 4_500_000_000 },
-  { id: "signal", place: "The Sun", km: 149_600_000 },
+  { id: "about", place: "Үүлсийн дээр", km: 10 },
+  { id: "orbit", place: "Дэлхийн ойрын тойрог зам", km: 400 },
+  { id: "moon", place: "Сар", km: 384_400 },
+  { id: "mars", place: "Ангараг", km: 225_000_000 },
+  { id: "belt", place: "Астероидын бүс", km: 350_000_000 },
+  { id: "rocks", place: "Бүсийн гүнд", km: 420_000_000 },
+  { id: "europa", place: "Европа", km: 628_000_000 },
+  { id: "saturn", place: "Санчир", km: 1_270_000_000 },
+  { id: "deep", place: "Гүн огторгуй", km: 4_500_000_000 },
+  { id: "signal", place: "Нар", km: 149_600_000 },
 ];
 
 export const stack: StackGroup[] = [
   {
     title: "Frontend",
-    note: "What I reach for every day.",
+    note: "Өдөр бүр ашигладаг зүйлс.",
     items: ["React", "Next.js", "TypeScript", "JavaScript", "Tailwind CSS", "shadcn/ui", "Zustand", "GSAP"],
   },
   {
     title: "Backend",
-    note: "The server side of my GitHub projects.",
+    note: "GitHub дээрх төслүүдийн минь серверийн тал.",
     items: ["Next.js API routes", "Node.js", "Bun", "Cloudflare Workers", "Hono", "JWT auth", "Resend", "UploadThing"],
   },
   {
-    title: "Database",
-    note: "Relational and document data.",
+    title: "Өгөгдлийн сан",
+    note: "Харилцаат болон баримтат өгөгдөл.",
     items: ["PostgreSQL", "Prisma", "MongoDB", "Mongoose", "Cloudflare D1", "Drizzle", "IndexedDB"],
   },
   {
-    title: "Hardware and AI",
-    note: "Where code meets the physical world.",
+    title: "Hardware ба AI",
+    note: "Код бодит ертөнцтэй уулзах цэг.",
     items: ["ESP32", "Arduino", "HX711 load cell", "Bluetooth LE", "Capacitor", "Gemini API", "Claude API"],
   },
 ];
 
 export const experience: Experience[] = [
   {
-    period: "2025 to 2026",
-    role: "Junior developer",
-    company: "Self-driven projects",
+    period: "2025-2026 он",
+    role: "Junior хөгжүүлэгч",
+    company: "Бие даасан төслүүд",
     description: "From DOM basics to React, Next.js, Prisma, PostgreSQL and MongoDB, shipping a new project almost every month.",
   },
   {
-    period: "Jul to Aug 2026",
-    role: "Game developer",
+    period: "2026 оны 7-8 сар",
+    role: "Тоглоом хөгжүүлэгч",
     company: "Malchin",
     description: "Combat mechanics, seeded terrain and elder dialogue for a Mongolian herder survival game on HTML canvas.",
   },
   {
-    period: "Sep 2026",
-    role: "Full-stack developer",
-    company: "Pinecone intern program, Vesta",
+    period: "2026 оны 9 сар",
+    role: "Full-stack хөгжүүлэгч",
+    company: "Pinecone интерн хөтөлбөр, Vesta",
     description: "2D try-on studio, AI wardrobe uploads and swipe-to-style for an AI fashion platform in an Nx monorepo. 86 commits.",
   },
   {
-    period: "Oct 2026",
-    role: "Full-stack developer",
+    period: "2026 оны 10 сар",
+    role: "Full-stack хөгжүүлэгч",
     company: "PineQuest S5 episode 1, SafePath",
     description: "Top contributor with 143 commits on a child-safety app: live location, safe zones, offline routing and an AI buddy.",
   },
   {
-    period: "Oct to Nov 2026",
-    role: "Hardware and full-stack developer",
+    period: "2026 оны 10-11 сар",
+    role: "Hardware болон full-stack хөгжүүлэгч",
     company: "PineQuest S5 episode 2, Дусал",
     description: "Sip detection on an ESP32 coaster, the Bluetooth link and the app's animated UI. 120 commits in a team of five.",
   },
@@ -167,11 +166,11 @@ export const experience: Experience[] = [
 
 export const malchin: Mission = {
   title: "Malchin",
-  event: "Team game, summer 2026",
-  tagline: "Нүүдэлчин: survive the steppe.",
+  event: "Багийн тоглоом, 2026 оны зун",
+  tagline: "Нүүдэлчин: тал нутагт амьд үлд.",
   description:
-    "A Mongolian herder survival game in the browser: raise livestock, survive the seasons, bring your family home.",
-  part: "Combat mechanics, seeded terrain and the elder's dialogue.",
+    "Browser дээр тоглодог монгол малчны амьд үлдэх тоглоом: малаа өсгөж, улирлыг даван туулж, гэр бүлтэйгээ эргэн нийлнэ.",
+  part: "Тулааны механик, seed-ээр үүсдэг газар нутаг, өвгөний харилцан яриа.",
   role: [
     "Combat mechanics wired into the player and livestock modules",
     "Seeded procedural terrain",
@@ -179,13 +178,13 @@ export const malchin: Mission = {
   ],
   stack: ["Next.js", "React", "HTML canvas", "TypeScript"],
   facts: [
-    { value: "18", label: "story goals" },
-    { value: "153", label: "culture quiz questions" },
-    { value: "5", label: "kinds of livestock" },
+    { value: "18", label: "түүхийн зорилт" },
+    { value: "153", label: "соёлын асуулт" },
+    { value: "5", label: "хошуу мал" },
   ],
   links: [
-    { label: "Play Malchin", href: "https://malchin-zeta.vercel.app" },
-    { label: "Source code", href: "https://github.com/btsolmon/Malchin" },
+    { label: "Malchin тоглох", href: "https://malchin-zeta.vercel.app" },
+    { label: "Эх код", href: "https://github.com/btsolmon/Malchin" },
   ],
   accent: "#ff8a5c",
   shot: { src: malchinShot, device: "browser", url: "malchin-zeta.vercel.app" },
@@ -193,11 +192,11 @@ export const malchin: Mission = {
 
 export const vesta: Mission = {
   title: "Vesta",
-  event: "Pinecone intern program, September 2026",
-  tagline: "See it on before you buy it.",
+  event: "Pinecone интерн хөтөлбөр, 2026 оны 9 сар",
+  tagline: "Худалдаж авахаасаа өмнө өмсөж үз.",
   description:
-    "An AI fashion platform with 3D outfit models, an AI wardrobe and virtual try-on. Named, like this stop, after the brightest asteroid in the belt.",
-  part: "The 2D try-on studio, AI wardrobe uploads and swipe-to-style.",
+    "3D хувцасны модел, AI хувцасны шүүгээ, виртуалаар өмсөж үзэх боломжтой AI загварын платформ. Энэ зогсоол шиг, бүсийн хамгийн тод астероидын нэрээр нэрлэгдсэн.",
+  part: "2D өмсөж үзэх студи, AI шүүгээнд зураг оруулах, swipe хийж хувцас сонгох хэсэг.",
   role: [
     "2D outfit viewer and try-on studio with a clothing carousel",
     "AI wardrobe with category-aware uploads, garment recognition and background removal",
@@ -206,20 +205,20 @@ export const vesta: Mission = {
   ],
   stack: ["Next.js 16", "React Three Fiber", "Gemini", "Cloudflare Workers", "D1 and Drizzle", "Nx"],
   facts: [
-    { value: "86", label: "commits" },
-    { value: "2D and 3D", label: "outfit viewers" },
+    { value: "86", label: "commit" },
+    { value: "2D ба 3D", label: "хувцас харах горим" },
   ],
-  links: [{ label: "Private repository", href: "https://github.com/pinecone-studio" }],
+  links: [{ label: "Хаалттай repository", href: "https://github.com/pinecone-studio" }],
   accent: "#d9c2a3",
 };
 
 export const safepath: Mission = {
   title: "SafePath",
   event: "PineQuest S5, episode 1",
-  tagline: "Get kids home safely.",
+  tagline: "Хүүхдүүдийг гэрт нь аюулгүй хүргэе.",
   description:
-    "A child-safety app: live location, safe zones drawn as rings on the map, and routing that still works offline.",
-  part: "Parent alerts, safe zones, offline routing and a kids' AI buddy.",
+    "Хүүхдийн аюулгүй байдлын апп: шууд байршил, газрын зураг дээр цагираг хэлбэрээр зурсан аюулгүй бүс, интернэтгүй ч ажилладаг чиглүүлэгч.",
+  part: "Эцэг эхийн мэдэгдэл, аюулгүй бүс, офлайн чиглүүлэгч, хүүхдийн AI найз.",
   role: [
     "Parent alerts for low battery, lost connection and surroundings photos",
     "Safe zones: tap a point, set a radius, the name fills itself in",
@@ -228,12 +227,12 @@ export const safepath: Mission = {
   ],
   stack: ["Next.js 16", "Capacitor", "Leaflet", "Gemini Vision", "ElevenLabs", "PWA"],
   facts: [
-    { value: "143", label: "commits, most on the team" },
-    { value: "6", label: "milestones shipped" },
+    { value: "143", label: "commit, багтаа хамгийн олон" },
+    { value: "6", label: "гүйцээсэн үе шат" },
   ],
   links: [
-    { label: "Open the app", href: "https://safepath-indol.vercel.app/" },
-    { label: "Source code", href: "https://github.com/pinecone-studio/pinequest-s5-episode-1-team-2" },
+    { label: "Апп нээх", href: "https://safepath-indol.vercel.app/" },
+    { label: "Эх код", href: "https://github.com/pinecone-studio/pinequest-s5-episode-1-team-2" },
   ],
   accent: "#e8c98f",
   shot: { src: safepathShot, device: "phone", url: "safepath-indol.vercel.app" },
@@ -242,10 +241,10 @@ export const safepath: Mission = {
 export const dusal: HardwareProject = {
   title: "Дусал",
   event: "PineQuest S5, episode 2",
-  tagline: "A coaster that counts every sip.",
+  tagline: "Балгалт бүрийг тоолдог аяганы суурь.",
   description:
-    "Put any cup on the coaster and it counts every sip, then tells your phone over Bluetooth. Europa hides an ocean under its ice; this hides a load cell under a cup.",
-  part: "Sip detection on the ESP32, the Bluetooth link and the app's animated UI.",
+    "Аягаа суурин дээр тавихад л балгалт бүрийг тоолж, утсанд тань Bluetooth-ээр дамжуулна. Европа мөсөн доороо далай нуудаг бол энэ нь аяганы доор load cell нуудаг.",
+  part: "ESP32 дээрх балгалт илрүүлэлт, Bluetooth холболт, аппын хөдөлгөөнт UI.",
   role: [
     "Sip detection that counts from 5 ml, senses 2 g and measures in about 1.7 s",
     "Stable readings: averages four samples once the cup settles",
@@ -256,22 +255,22 @@ export const dusal: HardwareProject = {
   ],
   stack: ["ESP32", "HX711", "Bluetooth LE", "Capacitor", "Cloudflare Workers", "D1"],
   facts: [
-    { value: "120", label: "commits" },
-    { value: "5 ml", label: "smallest sip it counts" },
-    { value: "1.7 s", label: "per measurement" },
+    { value: "120", label: "commit" },
+    { value: "5 мл", label: "тоолдог хамгийн бага балгалт" },
+    { value: "1.7 с", label: "нэг хэмжилтэд" },
   ],
   links: [
-    { label: "Open the app", href: "https://dusal.bbek3201.workers.dev" },
-    { label: "Source code", href: "https://github.com/pinecone-studio/pinequest-s5-episode-2-team-3" },
+    { label: "Апп нээх", href: "https://dusal.bbek3201.workers.dev" },
+    { label: "Эх код", href: "https://github.com/pinecone-studio/pinequest-s5-episode-2-team-3" },
   ],
   accent: "#8fd3ff",
   pipeline: [
-    { name: "Load cell", detail: "5 kg strain gauge" },
+    { name: "Load cell", detail: "5 кг strain gauge" },
     { name: "HX711", detail: "24-bit ADC" },
-    { name: "ESP32", detail: "WROOM-32 with OLED" },
-    { name: "Bluetooth LE", detail: "no Wi-Fi" },
-    { name: "Android app", detail: "Capacitor" },
-    { name: "Cloud", detail: "Workers and D1" },
+    { name: "ESP32", detail: "OLED дэлгэцтэй WROOM-32" },
+    { name: "Bluetooth LE", detail: "Wi-Fi хэрэггүй" },
+    { name: "Android апп", detail: "Capacitor" },
+    { name: "Cloud", detail: "Workers ба D1" },
   ],
   shot: { src: dusalShot, device: "phone", url: "dusal.bbek3201.workers.dev" },
 };
@@ -282,38 +281,38 @@ const gh = (repo: string) => `https://github.com/Libguutei/${repo}`;
 export const smallProjects: SmallProject[] = [
   {
     title: "Liquor Shop",
-    description: "Store with auth, admin dashboard, image uploads and order emails.",
+    description: "Нэвтрэлт, админ самбар, зураг оруулалт, захиалгын имэйлтэй онлайн дэлгүүр.",
     tags: ["Next.js", "Prisma", "PostgreSQL", "JWT"],
     link: gh("liqour-shop"),
   },
   {
     title: "Food Delivery",
-    description: "Ordering app with API routes, user roles and file storage.",
+    description: "API route, хэрэглэгчийн эрх, файл хадгалалттай хоол захиалгын апп.",
     tags: ["Next.js", "Prisma", "Vercel Blob"],
     link: gh("food-delivery-app"),
   },
   {
     title: "AI Image Generator",
-    description: "Generates and reads images through several AI providers.",
+    description: "Хэд хэдэн AI үйлчилгээгээр зураг үүсгэж, уншдаг апп.",
     tags: ["Next.js", "Gemini", "Hugging Face"],
     link: gh("AI-image-generator"),
   },
   {
     title: "Mongol Souls",
-    description: "A soulslike action game prototype that runs in the browser.",
+    description: "Browser дээр ажилладаг soulslike тулаант тоглоомын прототип.",
     tags: ["Phaser", "Vite"],
     link: "https://soulslike-sigma.vercel.app",
     image: soulsShot,
   },
   {
     title: "MovieWeb",
-    description: "Movie discovery with carousels, search and dark mode.",
+    description: "Carousel, хайлт, dark mode-той кино хайх сайт.",
     tags: ["Next.js", "shadcn/ui"],
     link: gh("MovieWeb-app"),
   },
   {
     title: "Todo API",
-    description: "CRUD REST API on Next.js route handlers and MongoDB.",
+    description: "Next.js route handler ба MongoDB дээрх CRUD REST API.",
     tags: ["Next.js", "Mongoose"],
     link: gh("next-todo-api"),
   },
