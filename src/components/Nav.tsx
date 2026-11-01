@@ -64,7 +64,7 @@ export function Nav() {
       <header ref={bar} className="fixed inset-x-0 top-0 z-[55] mix-blend-difference text-[#f1ede4]">
         <nav className="flex items-center justify-between px-5 py-5 md:px-10">
           <button onClick={() => go("#home")} className="font-display font-black text-xl tracking-tight">
-            <RollText text={`${profile.firstName[0]}.${profile.lastName[0]}®`} />
+            <RollText text={`${profile.heroLines[0][0]}.${profile.heroLines[1][0]}®`.toUpperCase()} />
           </button>
 
           <ul className="hidden md:flex gap-8 text-sm uppercase tracking-[0.18em]">
@@ -100,7 +100,7 @@ export function Nav() {
             <li key={l.target} className="overflow-hidden">
               <button
                 onClick={() => go(l.target)}
-                className="menu-link-inner group flex items-baseline gap-4 font-display font-black uppercase leading-[0.95] tracking-tight text-[13vw] md:text-[7.5vw]"
+                className="menu-link-inner group flex items-baseline gap-4 font-display font-black uppercase leading-[0.95] tracking-tight text-[11vw] md:text-[6vw]"
               >
                 <span className="font-sans text-sm font-medium tracking-normal opacity-50">0{i + 1}</span>
                 <RollText text={l.label} />

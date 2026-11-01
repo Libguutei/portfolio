@@ -90,13 +90,13 @@ export function Hero({ ready }: { ready: boolean }) {
 
         <h1 className="font-display font-black uppercase leading-[0.82] tracking-[-0.04em]">
           <span className="hero-row-1 block whitespace-nowrap text-[19vw] md:text-[17vw]">
-            <Chars text={profile.firstName} />
-            <span className="hero-role ml-[2vw] inline-block align-top font-serif text-[4.2vw] font-normal normal-case italic leading-none tracking-normal text-[#d4ff3a] md:text-[3vw]">
-              ({profile.role})
-            </span>
+            <Chars text={profile.heroLines[0]} />
           </span>
           <span className="hero-row-2 block whitespace-nowrap text-right text-[19vw] md:text-[17vw]">
-            <Chars text={profile.lastName} />
+            <span className="hero-role mr-[2vw] inline-block align-top font-serif text-[4.2vw] font-normal normal-case italic leading-none tracking-normal text-[#d4ff3a] md:text-[3vw]">
+              ({profile.role})
+            </span>
+            <Chars text={profile.heroLines[1]} />
           </span>
         </h1>
 
@@ -104,7 +104,9 @@ export function Hero({ ready }: { ready: boolean }) {
 
         <div className="hero-meta mt-6 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <p className="max-w-md text-lg leading-snug opacity-80 md:text-xl">{profile.intro}</p>
-          <span className="text-sm uppercase tracking-[0.2em] opacity-60 md:pr-44">{profile.location}</span>
+          <span className="text-sm uppercase tracking-[0.2em] opacity-60 md:pr-44">
+            {profile.age} y/o · {profile.experience} exp · {profile.location}
+          </span>
         </div>
       </div>
 

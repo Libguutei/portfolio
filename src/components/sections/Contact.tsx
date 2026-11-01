@@ -80,7 +80,7 @@ export function Contact() {
 
       <div className="relative px-5 pb-8 pt-32 text-[#0b0b0c] md:px-10 md:pt-48">
         <div className="mb-12 flex items-center gap-4 text-xs uppercase tracking-[0.25em] opacity-60 md:text-sm">
-          <span>(05)</span>
+          <span>(07)</span>
           <span className="h-px w-12 bg-current" />
           <span>Contact</span>
         </div>
@@ -137,7 +137,7 @@ export function Contact() {
 
         <footer className="mt-28 border-t border-[#0b0b0c]/20 pt-6">
           <div className="flex flex-wrap items-center justify-between gap-4 text-xs uppercase tracking-[0.2em]">
-            <span>© {new Date().getFullYear()} {profile.firstName} {profile.lastName}</span>
+            <span>© {new Date().getFullYear()} {profile.name}</span>
             <span className="tabular-nums">
               UB local time — {time}
             </span>
@@ -145,8 +145,8 @@ export function Contact() {
               <RollText text="Back to top ↑" />
             </button>
           </div>
-          <div className="ct-giant mt-6 overflow-hidden font-display text-[25vw] font-black uppercase leading-[0.78] tracking-[-0.05em]">
-            {[...`${profile.firstName}.`].map((ch, i) => (
+          <div className="ct-giant mt-6 overflow-hidden font-display text-[20vw] font-black uppercase leading-[0.78] tracking-[-0.05em]">
+            {[...`${profile.heroLines[0]}.`].map((ch, i) => (
               <span key={i} className="ct-giant-char inline-block">
                 {ch}
               </span>

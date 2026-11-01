@@ -31,7 +31,7 @@ export function Experience() {
   return (
     <section id="journey" ref={root} data-bg="#f1ede4" data-fg="#0b0b0c" className="px-5 py-32 md:px-10 md:py-48">
       <div className="mb-20 flex items-center gap-4 text-xs uppercase tracking-[0.25em] opacity-60 md:text-sm">
-        <span>(04)</span>
+        <span>(06)</span>
         <span className="h-px w-12 bg-current" />
         <span>Journey</span>
       </div>

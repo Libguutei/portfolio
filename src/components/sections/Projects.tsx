@@ -4,11 +4,11 @@ import { projects, type Project } from "@/data/portfolio";
 import { SplitReveal } from "../motion/SplitReveal";
 
 function ProjectCard({ project }: { project: Project }) {
-  const card = useRef<HTMLElement>(null);
+  const card = useRef<HTMLAnchorElement>(null);
   const [c1, c2, c3] = project.palette;
 
   // 3D tilt + гэрлийн тусгал хулганыг дагана
-  const onMove = (e: PointerEvent<HTMLElement>) => {
+  const onMove = (e: PointerEvent<HTMLAnchorElement>) => {
     const el = card.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
@@ -24,11 +24,14 @@ function ProjectCard({ project }: { project: Project }) {
 
   return (
     <div className="pj-card shrink-0 [perspective:1200px]">
-      <article
+      <a
         ref={card}
         onPointerMove={onMove}
         onPointerLeave={onLeave}
-        data-cursor="View"
+        href={project.link}
+        target="_blank"
+        rel="noreferrer"
+        data-cursor="GitHub"
         className="pj-tilt group relative flex h-[68svh] w-[82vw] flex-col overflow-hidden rounded-[28px] md:w-[46vw] lg:w-[38vw]"
         style={{ "--c1": c1, "--c2": c2, "--c3": c3 } as CSSProperties}
       >
@@ -65,7 +68,7 @@ function ProjectCard({ project }: { project: Project }) {
             ))}
           </div>
         </div>
-      </article>
+      </a>
     </div>
   );
 }
@@ -121,7 +124,7 @@ export function Projects() {
   return (
     <section id="work" ref={root} data-bg="#0b0b0c" data-fg="#f1ede4" className="relative h-[100svh] overflow-hidden">
       <div className="absolute inset-x-5 top-6 z-10 flex items-center justify-between text-xs uppercase tracking-[0.25em] opacity-60 md:inset-x-10 md:top-24 md:text-sm">
-        <span>(02) Selected work</span>
+        <span>(03) Selected work</span>
         <div className="h-px w-40 bg-white/15 md:w-64">
           <div className="pj-progress h-full origin-left scale-x-0 bg-[#d4ff3a]" />
         </div>
@@ -135,7 +138,7 @@ export function Projects() {
             <span className="font-serif font-normal normal-case italic text-[#d4ff3a]">works</span>
           </SplitReveal>
           <p className="mt-8 max-w-sm text-lg opacity-70">
-            A few projects I'm proud of — built end-to-end with TypeScript. Keep scrolling →
+            Real projects from my GitHub — built end-to-end with TypeScript. Keep scrolling →
           </p>
         </div>
 

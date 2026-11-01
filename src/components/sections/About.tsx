@@ -59,7 +59,7 @@ export function About() {
     { scope: root },
   );
 
-  const initials = `${profile.firstName[0]}${profile.lastName[0]}`;
+  const initials = `${profile.heroLines[0][0]}${profile.heroLines[1][0]}`.toUpperCase();
 
   return (
     <section id="about" ref={root} data-bg="#f1ede4" data-fg="#0b0b0c" className="relative px-5 py-32 md:px-10 md:py-48">
@@ -82,7 +82,7 @@ export function About() {
 
         <div className="md:col-span-7 md:pl-8">
           <SplitReveal as="h2" by="chars" className="font-display text-5xl font-black uppercase leading-[0.9] tracking-tight md:text-7xl">
-            Hello, I'm {profile.firstName}
+            Hello, I'm {profile.name}
             <span className="text-[#ff5b2e]">.</span>
           </SplitReveal>
 
@@ -90,19 +90,18 @@ export function About() {
             {profile.about}
           </p>
 
-          <div className="about-facts mt-16 grid grid-cols-2 gap-6 border-t border-current/15 pt-8 text-sm md:grid-cols-3">
-            <div className="about-fact">
-              <div className="opacity-50 uppercase tracking-[0.2em] text-xs">Based in</div>
-              <div className="mt-2 text-lg">{profile.location}</div>
-            </div>
-            <div className="about-fact">
-              <div className="opacity-50 uppercase tracking-[0.2em] text-xs">Focus</div>
-              <div className="mt-2 text-lg">Motion · Frontend · Fullstack</div>
-            </div>
-            <div className="about-fact">
-              <div className="opacity-50 uppercase tracking-[0.2em] text-xs">Stack</div>
-              <div className="mt-2 text-lg font-serif italic text-2xl">100% TypeScript</div>
-            </div>
+          <div className="about-facts mt-16 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-current/15 pt-8 text-sm">
+            {[
+              { label: "Age", value: `${profile.age} years old` },
+              { label: "Experience", value: profile.experience },
+              { label: "Role", value: profile.role },
+              { label: "Based in", value: profile.location },
+            ].map(f => (
+              <div key={f.label} className="about-fact">
+                <div className="text-xs uppercase tracking-[0.2em] opacity-50">{f.label}</div>
+                <div className="mt-2 font-serif text-2xl italic md:text-3xl">{f.value}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
