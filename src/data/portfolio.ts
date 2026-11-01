@@ -89,8 +89,9 @@ export const navLinks: NavLink[] = [
   { label: "Home", target: "#home" },
   { label: "About", target: "#about" },
   { label: "Stack", target: "#stack" },
-  { label: "Work", target: "#work" },
+  { label: "Projects", target: "#featured" },
   { label: "PineQuest", target: "#pinequest" },
+  { label: "Work", target: "#work" },
   { label: "GitHub", target: "#github" },
   { label: "Contact", target: "#contact" },
 ];
@@ -237,6 +238,94 @@ export const hardware: HardwareProject = {
   site: "https://dusal.bbek3201.workers.dev",
 };
 
+export type FeaturedVisual = "vesta" | "safepath" | "malchin";
+
+export interface FeaturedProject {
+  id: string;
+  event: string;
+  title: string;
+  tagline: string;
+  description: string;
+  role: string[];
+  stack: string[];
+  stats: { value: string; label: string }[];
+  links: { label: string; href: string }[];
+  /** Панелын өнгө: дэвсгэр, текст, онцлох өнгө */
+  theme: { bg: string; fg: string; accent: string };
+  visual: FeaturedVisual;
+}
+
+export const featured: FeaturedProject[] = [
+  {
+    id: "01",
+    event: "Pinecone Intern 4AB · Sep 2026",
+    title: "Vesta",
+    tagline: "See it on. Before you buy it.",
+    description:
+      "AI fashion platform — 3D outfit models from real photos, an AI wardrobe, 2D virtual try-on and swipe-to-style recommendations.",
+    role: [
+      "2D outfit viewer & try-on studio with an interactive clothing carousel",
+      "AI wardrobe: category-aware uploads, garment recognition, background removal",
+      "Swipe browsing with try-on and AI outfit rating actions",
+      "Body-photo validation and AI stylist chat services",
+    ],
+    stack: ["Next.js 16", "React Three Fiber", "Gemini", "Cloudflare Workers", "D1 + Drizzle", "Nx"],
+    stats: [
+      { value: "86", label: "commits" },
+      { value: "2D + 3D", label: "outfit viewer" },
+      { value: "AI", label: "stylist & rating" },
+    ],
+    links: [{ label: "Private repo · Pinecone", href: "https://github.com/pinecone-studio" }],
+    theme: { bg: "#f3e9ff", fg: "#1b0b2e", accent: "#8b3dff" },
+    visual: "vesta",
+  },
+  {
+    id: "02",
+    event: "PineQuest S5 · Episode 1 · Team 2",
+    title: "SafePath",
+    tagline: "Get kids home safely.",
+    description:
+      "Child-safety app for parents and kids — live location sharing, safe zones, camera navigation with AI scene recognition and offline routing.",
+    role: [
+      "Parent dashboard: battery, connection-loss and surroundings-photo alerts",
+      "Safe zones: tap a point on the map, set a radius, auto-named",
+      "Offline routing home with saved routes, map rotating with the compass",
+      "Build-your-own AI buddy for kids that speaks proper Mongolian",
+    ],
+    stack: ["Next.js 16", "Capacitor Android", "Leaflet", "Gemini Vision", "ElevenLabs TTS", "PWA"],
+    stats: [
+      { value: "140+", label: "commits · #1" },
+      { value: "6", label: "milestones" },
+      { value: "0 net", label: "offline routing" },
+    ],
+    links: [{ label: "View repo", href: "https://github.com/pinecone-studio/pinequest-s5-episode-1-team-2" }],
+    theme: { bg: "#e6fff1", fg: "#04261a", accent: "#00a86b" },
+    visual: "safepath",
+  },
+  {
+    id: "03",
+    event: "Team game · Jul — Aug 2026",
+    title: "Malchin",
+    tagline: "Нүүдэлчин — survive the steppe.",
+    description:
+      "A Mongolian herder survival game in the browser: raise five kinds of livestock, survive seasons, fight wolves and spirits, and save your family.",
+    role: [
+      "Combat mechanics wired into the player and livestock modules",
+      "Seeded procedural terrain generation",
+      "Elder dialogue system, HUD and story text fixes",
+    ],
+    stack: ["Next.js", "React", "HTML Canvas", "TypeScript"],
+    stats: [
+      { value: "18", label: "story goals" },
+      { value: "153", label: "culture quiz Qs" },
+      { value: "5", label: "livestock types" },
+    ],
+    links: [{ label: "View repo", href: "https://github.com/btsolmon/Malchin" }],
+    theme: { bg: "#1a1030", fg: "#fff4e0", accent: "#ffb347" },
+    visual: "malchin",
+  },
+];
+
 export const experience: Experience[] = [
   {
     period: "2026 — Episode 2",
@@ -251,6 +340,20 @@ export const experience: Experience[] = [
     company: "PineQuest S5 · SafePath",
     description:
       "Top contributor (143 commits) on a child-safety app: live location sharing, safe zones with radius, landmarks and parent/child screens.",
+  },
+  {
+    period: "2026 — Sep",
+    role: "Full-stack Developer",
+    company: "Pinecone Intern · Vesta",
+    description:
+      "Built the 2D try-on studio, AI wardrobe uploads and swipe-to-style flow of an AI fashion platform in an Nx monorepo. 86 commits.",
+  },
+  {
+    period: "2026 — Jul / Aug",
+    role: "Game Developer",
+    company: "Malchin — Нүүдэлчин",
+    description:
+      "Worked on the combat mechanics, seeded terrain and elder dialogue of a Mongolian herder survival game on HTML canvas.",
   },
   {
     period: "2025 — 2026",
