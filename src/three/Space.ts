@@ -31,7 +31,7 @@ interface Body {
   tick?: (dt: number, p: number) => void;
 }
 
-const STAR_COUNT = 2600;
+const STAR_COUNT = 1800;
 const BOX = { x: 90, y: 55, zFar: -280, zNear: -14 };
 
 const smooth = (t: number) => t * t * (3 - 2 * t);
@@ -144,8 +144,10 @@ export class Space {
 
   private updateStars(dt: number, visibility: number) {
     const v = this.reduced ? 0 : this.velocity;
-    const speed = (this.reduced ? 0 : 4) + v * 1.1;
-    const len = Math.min(14, Math.abs(v) * 0.3);
+    // Удаан гүйлгэхэд нүд ядраахгүйн тулд хурд, зураасыг хязгаарлана
+    const boost = Math.max(-10, Math.min(10, v * 0.35));
+    const speed = (this.reduced ? 0 : 1.2) + boost;
+    const len = Math.min(5, Math.abs(boost) * 0.5);
     const range = BOX.zNear - BOX.zFar;
     for (let i = 0; i < STAR_COUNT; i++) {
       const k = i * 3;
@@ -161,8 +163,8 @@ export class Space {
     }
     this.stars.geometry.attributes.position!.needsUpdate = true;
     this.streaks.geometry.attributes.position!.needsUpdate = true;
-    (this.stars.material as THREE.PointsMaterial).opacity = visibility;
-    (this.streaks.material as THREE.LineBasicMaterial).opacity = visibility * Math.min(0.55, Math.abs(v) / 45);
+    (this.stars.material as THREE.PointsMaterial).opacity = visibility * 0.85;
+    (this.streaks.material as THREE.LineBasicMaterial).opacity = visibility * Math.min(0.18, Math.abs(boost) / 60);
   }
 
   // ---------- Гарагууд ----------
@@ -340,7 +342,7 @@ export class Space {
 
     // Scroll хурд (px/frame), зөөлрүүлсэн
     const sy = window.scrollY;
-    this.velocity += (sy - this.lastScroll - this.velocity) * 0.2;
+    this.velocity += (sy - this.lastScroll - this.velocity) * 0.06;
     this.lastScroll = sy;
 
     // Хулганыг дагах бага зэргийн parallax
