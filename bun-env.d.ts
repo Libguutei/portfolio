@@ -17,3 +17,14 @@ declare module "*.module.css" {
   const classes: { readonly [key: string]: string };
   export = classes;
 }
+
+declare module "*.jpg" {
+  /** Bundle хийгдсэн зургийн зам */
+  const path: string;
+  export default path;
+}
+
+declare module "*.png" {
+  const path: string;
+  export default path;
+}
