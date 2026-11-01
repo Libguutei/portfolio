@@ -13,8 +13,9 @@ import {
   vestaTexture,
 } from "./textures";
 import { createSun } from "./sun";
+import { journey } from "@/lib/journey";
 
-export type BodyKind = "earth" | "moon" | "mars" | "vesta" | "europa" | "saturn" | "sun";
+export type BodyKind = "earth" | "moon" | "mars" | "vesta" | "rocks" | "europa" | "saturn" | "sun";
 
 interface Body {
   group: THREE.Group;
@@ -25,10 +26,8 @@ interface Body {
   near: number;
   /** Дэлгэцийн байрлалаас доош шилжүүлэх (дэлхийн муруйд) */
   drop: number;
-  /** Хэсгийн төгсгөлд доошоо живж алс руу холдоно */
+  /** Өнгөрөхдөө хажуугаар нисэхийн оронд доошоо живж холдоно */
   recede?: boolean;
-  /** Хэсгийн явцыг хэр хурдан ойртолт болгох (их бол эрт ойртоно) */
-  reach?: number;
   tick?: (dt: number, p: number) => void;
 }
 
@@ -65,7 +64,7 @@ export class Space {
   private pointer = { x: 0, y: 0, tx: 0, ty: 0 };
   /** Дэлхий ойрхон байх үед л дагуулын шошго харагдана */
   private labelsOn = false;
-  private lastScroll = window.scrollY;
+  private lastProgress = journey.progress;
   private velocity = 0;
   private frame = 0;
   private reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -153,8 +152,8 @@ export class Space {
 
   private updateStars(dt: number, visibility: number) {
     const v = this.reduced ? 0 : this.velocity;
-    // Удаан гүйлгэхэд нүд ядраахгүйн тулд хурд, зураасыг хязгаарлана
-    const boost = Math.max(-10, Math.min(10, v * 0.35));
+    // Нүд ядраахгүйн тулд хурд, зураасыг хязгаарлана
+    const boost = Math.max(-10, Math.min(10, v * 12));
     const speed = (this.reduced ? 0 : 1.2) + boost;
     const len = Math.min(5, Math.abs(boost) * 0.5);
     const range = BOX.zNear - BOX.zFar;
@@ -272,35 +271,19 @@ export class Space {
       body.spin.push([rock, 0.12]);
 
       // Эргэн тойрон хөвөх чулуунууд
-      const count = 140;
-      const rocks = new THREE.InstancedMesh(
-        new THREE.DodecahedronGeometry(0.22, 0),
-        new THREE.MeshStandardMaterial({ color: 0x9c8b78, roughness: 1, flatShading: true }),
-        count,
-      );
-      const seeds = Array.from({ length: count }, () => ({
-        a: Math.random() * Math.PI * 2,
-        r: 5 + Math.random() * 6,
-        y: (Math.random() - 0.5) * 2.4,
-        s: 0.4 + Math.random() * 1.8,
-        w: 0.05 + Math.random() * 0.12,
-      }));
-      const m4 = new THREE.Matrix4();
-      const q = new THREE.Quaternion();
-      const e = new THREE.Euler();
-      body.tick = () => {
-        const t = this.clock.elapsedTime;
-        seeds.forEach((s, i) => {
-          const a = s.a + t * s.w;
-          e.set(t * s.w * 4, t * s.w * 3, 0);
-          q.setFromEuler(e);
-          m4.compose(this.tmp.set(Math.cos(a) * s.r, s.y, Math.sin(a) * s.r), q, new THREE.Vector3(s.s, s.s, s.s));
-          rocks.setMatrixAt(i, m4);
-        });
-        rocks.instanceMatrix.needsUpdate = true;
-      };
-      group.add(rocks);
+      const field = this.asteroidField(140, 5, 11, 2.4, 0.4, 1.8);
+      group.add(field.mesh);
+      body.tick = field.update;
       group.rotation.x = 0.35;
+    }
+
+    if (kind === "rocks") {
+      // Бүсийн гүн: том талбайд тархсан чулуунууд дунд нисэнэ
+      const field = this.asteroidField(170, 5, 18, 8, 0.5, 2.6);
+      group.add(field.mesh);
+      body.tick = field.update;
+      group.rotation.x = 0.5;
+      Object.assign(body, { far: 70, near: 34 });
     }
 
     if (kind === "europa") {
@@ -341,12 +324,45 @@ export class Space {
       group.add(sun.group);
       body.spin.push([sun.surface, 0.02]);
       body.tick = () => sun.update(this.reduced ? 0 : this.clock.elapsedTime);
-      // Сүүлийн хэсэг тул хуудасны төгсгөлд хүрэхэд бүрэн ойртсон байна
-      Object.assign(body, { far: 160, near: 24, reach: 2.1 });
+      Object.assign(body, { far: 160, near: 26 });
     }
 
     this.scene.add(group);
     return body;
+  }
+
+  /** Цагираг хэлбэрээр тархаж эргэлдэх олон жижиг чулуу (нэг draw call) */
+  private asteroidField(count: number, rMin: number, rMax: number, spreadY: number, sMin: number, sMax: number) {
+    const mesh = new THREE.InstancedMesh(
+      new THREE.DodecahedronGeometry(0.22, 0),
+      new THREE.MeshStandardMaterial({ color: 0x9c8b78, roughness: 1, flatShading: true }),
+      count,
+    );
+    // Instance-ууд өргөн тархсан тул үндсэн геометрийн хүрээгээр тасдаж болохгүй
+    mesh.frustumCulled = false;
+    const seeds = Array.from({ length: count }, () => ({
+      a: Math.random() * Math.PI * 2,
+      r: rMin + Math.random() * (rMax - rMin),
+      y: (Math.random() - 0.5) * spreadY,
+      s: sMin + Math.random() * (sMax - sMin),
+      w: 0.03 + Math.random() * 0.1,
+    }));
+    const m4 = new THREE.Matrix4();
+    const q = new THREE.Quaternion();
+    const e = new THREE.Euler();
+    const scale = new THREE.Vector3();
+    const update = () => {
+      const t = this.reduced ? 0 : this.clock.elapsedTime;
+      seeds.forEach((s, i) => {
+        const a = s.a + t * s.w;
+        e.set(t * s.w * 4, t * s.w * 3, 0);
+        q.setFromEuler(e);
+        m4.compose(this.tmp.set(Math.cos(a) * s.r, s.y, Math.sin(a) * s.r), q, scale.setScalar(s.s));
+        mesh.setMatrixAt(i, m4);
+      });
+      mesh.instanceMatrix.needsUpdate = true;
+    };
+    return { mesh, update };
   }
 
   private satellite() {
@@ -369,10 +385,11 @@ export class Space {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
 
-    // Scroll хурд (px/frame), зөөлрүүлсэн
-    const sy = window.scrollY;
-    this.velocity += (sy - this.lastScroll - this.velocity) * 0.06;
-    this.lastScroll = sy;
+    // Аяллын хурд (scene/сек), зөөлрүүлсэн — шилжилтийн үед одод урсана
+    const progress = journey.progress;
+    const vel = (progress - this.lastProgress) / Math.max(dt, 1e-3);
+    this.lastProgress = progress;
+    this.velocity += (vel - this.velocity) * 0.15;
 
     // Хулганыг дагах бага зэргийн parallax
     this.pointer.x += (this.pointer.tx - this.pointer.x) * 0.04;
@@ -381,25 +398,19 @@ export class Space {
     this.camera.rotation.set(this.pointer.y * 0.02, this.pointer.x * 0.03, 0);
     this.camera.updateMatrixWorld();
 
-    // Одод: үүлсийн дээрээс эхлэн тодорно
-    const about = document.getElementById("about");
-    const orbit = document.getElementById("orbit");
-    let starVis = 1;
-    if (about && orbit) {
-      // about дэлгэцэнд орж ирэхээс orbit дэлгэцийн 40%-д хүрэх хооронд 0 → 1
-      const climbed = Math.max(0, vh - about.getBoundingClientRect().top);
-      const left = Math.max(0, orbit.getBoundingClientRect().top - vh * 0.4);
-      starVis = climbed + left === 0 ? 1 : clamp01(climbed / (climbed + left));
-    }
-    this.updateStars(dt, starVis);
+    // Одод: үүлсийг давж гарахаас эхлэн тодорно
+    this.updateStars(dt, clamp01((progress - 0.5) / 1.3));
 
-    // Гарагууд
+    // Гарагууд: scene-ийнхээ дугаараар ирж, өнгөрнө
+    this.labelsOn = false;
     document.querySelectorAll<HTMLElement>("[data-body]").forEach(el => {
+      const scene = Number(el.closest<HTMLElement>("[data-scene]")?.dataset.scene ?? -99);
+      // rel: -1 = нэг scene-ийн өмнө (ирж байна), 0 = энд, +1 = өнгөрсөн
+      const rel = progress - scene;
       const rect = el.getBoundingClientRect();
-      // Нуугдсан (display: none) элемент 0 хэмжээтэй — гараг гаргахгүй
-      const near = rect.width > 0 && rect.bottom > -vh * 0.8 && rect.top < vh * 1.8;
       let body = this.bodies.get(el);
-      if (!near) {
+      // Шилжилтийн дунд текстур үүсгэж гацахгүйн тулд хоёр scene-ийн өмнө бэлдэнэ
+      if (rel < -2.5 || rel > 1.2 || rect.width === 0) {
         if (body) body.group.visible = false;
         return;
       }
@@ -407,32 +418,42 @@ export class Space {
         body = this.create(el.dataset.body as BodyKind);
         this.bodies.set(el, body);
       }
-      body.group.visible = true;
+      // Зөвхөн өөрийн scene болон түүн рүү/түүнээс нисэх үед харагдана
+      const visible = rel > -0.92 && rel < 0.9;
+      body.group.visible = visible;
+      if (!visible) return;
 
-      const scope = el.dataset.progress === "section" ? (el.closest("section") ?? el) : el;
-      const r = scope.getBoundingClientRect();
-      const p = (vh - r.top) / (vh + r.height);
-      // Дэлхий: хэсгийн эхэнд ойртож, бараг бүх хугацаанд том байгаад, төгсгөлд нь доошоо живж холдоно
-      const leave = body.recede ? smooth(clamp01((p - 0.82) / 0.18)) : 0;
-      const depth = body.recede
-        ? leave > 0
-          ? THREE.MathUtils.lerp(body.near, 200, leave)
-          : THREE.MathUtils.lerp(body.far, body.near, smooth(clamp01(p / 0.22)))
-        : THREE.MathUtils.lerp(body.far, body.near, smooth(clamp01(p * (body.reach ?? 1.25))));
+      let depth: number;
+      let yOff: number;
+      if (rel <= 0) {
+        // Ирж байна: дээрээс алсаас ойртоно
+        const t = smooth(clamp01(1 + rel));
+        depth = THREE.MathUtils.lerp(body.far, body.near, t);
+        yOff = -(1 - t) * vh * 0.5;
+      } else if (body.recede) {
+        // Дэлхий: доошоо живж холдоно — бид дээшээ нисч байна
+        const t = smooth(clamp01(rel));
+        depth = THREE.MathUtils.lerp(body.near, 220, t);
+        yOff = t * vh * 0.75;
+      } else {
+        // Хажуугаар нь нисэн өнгөрнө: ойртож, доошоо гарна
+        const t = smooth(clamp01(rel));
+        depth = THREE.MathUtils.lerp(body.near, body.near * 0.55, t);
+        yOff = t * vh * 1.1;
+      }
 
-      // Элементийн дэлгэц дээрх төвийг 3D орон зайд буулгана
-      // Холдох бие дээшээ гүйхгүй: дэлгэцийн голоос дээш гарахгүй, төгсгөлд доошоо живнэ
-      const centerY = rect.top + rect.height / 2;
-      const cy = (body.recede ? Math.max(centerY, vh * 0.5) : centerY) + leave * vh * 0.7;
+      // Байрлал заагч элементийн дэлгэц дээрх төвийг 3D орон зайд буулгана
+      const cy = rect.top + rect.height / 2 + yOff;
       const ndcX = ((rect.left + rect.width / 2) / vw) * 2 - 1;
       const ndcY = -(cy / vh) * 2 + 1;
       this.tmp.set(ndcX, ndcY, 0.5).unproject(this.camera).sub(this.camera.position).normalize();
       body.group.position.copy(this.camera.position).addScaledVector(this.tmp, depth);
       body.group.position.y -= body.drop;
-      if (body.recede) this.labelsOn = depth < body.near + 10;
+      if (body.recede && Math.abs(rel) < 0.35) this.labelsOn = true;
 
-      for (const [obj, speed] of body.spin) obj.rotation.y += dt * speed * (this.reduced ? 0 : 1) + this.velocity * 0.0004;
-      body.tick?.(dt, p);
+      const spinBoost = this.reduced ? 0 : Math.abs(this.velocity) * 0.01;
+      for (const [obj, speed] of body.spin) obj.rotation.y += dt * speed * (this.reduced ? 0 : 1) + spinBoost;
+      body.tick?.(dt, rel);
     });
 
     this.updateLabels(vw, vh);
