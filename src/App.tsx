@@ -8,8 +8,9 @@ import { Hero } from "./components/sections/Hero";
 import { Marquee } from "./components/sections/Marquee";
 import { About } from "./components/sections/About";
 import { Projects } from "./components/sections/Projects";
-import { Stats } from "./components/sections/Stats";
-import { Services } from "./components/sections/Services";
+import { Stack } from "./components/sections/Stack";
+import { Hardware } from "./components/sections/Hardware";
+import { Contributions } from "./components/sections/Contributions";
 import { Experience } from "./components/sections/Experience";
 import { Contact } from "./components/sections/Contact";
 import "./index.css";
@@ -67,9 +68,10 @@ export function App() {
         <Hero ready={ready} />
         <Marquee />
         <About />
+        <Stack />
         <Projects />
-        <Stats />
-        <Services />
+        <Hardware />
+        <Contributions />
         <Experience />
         <Contact />
       </main>

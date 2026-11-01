@@ -329,3 +329,97 @@ html.has-cursor * {
     transition: none !important;
   }
 }
+
+/* ---------- Hardware: water + BLE ---------- */
+.wave {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 200%;
+  height: 18px;
+}
+
+.wave path {
+  fill: #3fb4ff;
+}
+
+.wave-back {
+  opacity: 0.5;
+  animation: wave 5s linear infinite;
+}
+
+.wave-front {
+  top: 2px;
+  animation: wave 3.2s linear infinite reverse;
+}
+
+@keyframes wave {
+  to {
+    translate: -50% 0;
+  }
+}
+
+.bubble {
+  position: absolute;
+  bottom: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  border: 1.5px solid rgb(255 255 255 / 0.6);
+  animation: bubble 3.6s ease-in infinite;
+}
+
+@keyframes bubble {
+  0% {
+    translate: 0 0;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    translate: 6px -260px;
+    opacity: 0;
+  }
+}
+
+.ble-wave {
+  display: block;
+  border: 2px solid #5ec8ff;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 9999px;
+  rotate: 45deg;
+  opacity: 0;
+  animation: ble 1.8s ease-out infinite;
+}
+
+@keyframes ble {
+  0% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ---------- GitHub contributions ---------- */
+.gh-grid {
+  --gap: 4px;
+  --cell: clamp(10px, calc((100vw - 15rem) / 53 - var(--gap)), 20px);
+}
+
+.gh-size {
+  width: var(--cell);
+  height: var(--cell);
+}
+
+@media (max-width: 767px) {
+  .gh-grid {
+    --gap: 3px;
+    --cell: 11px;
+  }
+}
