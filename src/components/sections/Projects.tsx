@@ -124,7 +124,7 @@ export function Projects() {
   return (
     <section id="work" ref={root} data-bg="#0b0b0c" data-fg="#f1ede4" className="relative h-[100svh] overflow-hidden">
       <div className="absolute inset-x-5 top-6 z-10 flex items-center justify-between text-xs uppercase tracking-[0.25em] opacity-60 md:inset-x-10 md:top-24 md:text-sm">
-        <span>(03) Selected work</span>
+        <span>(05) More work</span>
         <div className="h-px w-40 bg-white/15 md:w-64">
           <div className="pj-progress h-full origin-left scale-x-0 bg-[#d4ff3a]" />
         </div>

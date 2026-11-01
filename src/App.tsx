@@ -9,6 +9,7 @@ import { Marquee } from "./components/sections/Marquee";
 import { About } from "./components/sections/About";
 import { Projects } from "./components/sections/Projects";
 import { Stack } from "./components/sections/Stack";
+import { Featured } from "./components/sections/Featured";
 import { Hardware } from "./components/sections/Hardware";
 import { Contributions } from "./components/sections/Contributions";
 import { Experience } from "./components/sections/Experience";
@@ -69,8 +70,9 @@ export function App() {
         <Marquee />
         <About />
         <Stack />
-        <Projects />
+        <Featured />
         <Hardware />
+        <Projects />
         <Contributions />
         <Experience />
         <Contact />

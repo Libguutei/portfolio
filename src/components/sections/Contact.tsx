@@ -80,7 +80,7 @@ export function Contact() {
 
       <div className="relative px-5 pb-8 pt-32 text-[#0b0b0c] md:px-10 md:pt-48">
         <div className="mb-12 flex items-center gap-4 text-xs uppercase tracking-[0.25em] opacity-60 md:text-sm">
-          <span>(07)</span>
+          <span>(08)</span>
           <span className="h-px w-12 bg-current" />
           <span>Contact</span>
         </div>

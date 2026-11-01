@@ -143,7 +143,7 @@ export function Contributions() {
   return (
     <section id="github" ref={root} data-bg="#0d1117" data-fg="#e6edf3" className="relative px-5 py-32 md:px-10 md:py-44">
       <div className="mb-12 flex items-center gap-4 text-xs uppercase tracking-[0.25em] opacity-60 md:text-sm">
-        <span>(05)</span>
+        <span>(06)</span>
         <span className="h-px w-12 bg-current" />
         <span>GitHub insights</span>
       </div>
