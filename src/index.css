@@ -1,5 +1,4 @@
 @import "../styles/globals.css";
-@import "lenis/dist/lenis.css";
 
 @theme {
   --font-display: "Unbounded", ui-sans-serif, system-ui, sans-serif;
@@ -31,7 +30,7 @@ body {
   font-size: 1.0625rem;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  overflow-x: clip;
+  overflow: hidden;
   font-variant-numeric: tabular-nums;
 }
 

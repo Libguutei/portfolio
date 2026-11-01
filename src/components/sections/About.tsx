@@ -1,71 +1,64 @@
-import { useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { useEffect, useRef } from "react";
+import { gsap } from "@/lib/gsap";
 import { profile } from "@/data/portfolio";
+import { Scene } from "../Scene";
 import { StopLabel } from "../StopLabel";
 
 const BANK = [
-  { left: "-10%", top: "70%", w: "60vw", h: "18vw", depth: 1.4 },
-  { left: "40%", top: "78%", w: "70vw", h: "20vw", depth: 1.8 },
-  { left: "10%", top: "88%", w: "80vw", h: "22vw", depth: 2.2 },
-  { left: "65%", top: "20%", w: "30vw", h: "9vw", depth: 0.8 },
-  { left: "-5%", top: "8%", w: "24vw", h: "7vw", depth: 1 },
+  { left: "-10%", top: "62%", w: "60vw", h: "18vw" },
+  { left: "40%", top: "72%", w: "70vw", h: "20vw" },
+  { left: "10%", top: "84%", w: "80vw", h: "22vw" },
+  { left: "65%", top: "14%", w: "30vw", h: "9vw" },
 ];
 
-/** 10 км: үүлсийн дээгүүр. Үүлс доороо өнгөрөх тусам бид дээшилнэ */
-export function About() {
-  const root = useRef<HTMLElement>(null);
+interface Props {
+  active: boolean;
+  direction: 1 | -1;
+  ready: boolean;
+}
 
-  useGSAP(
-    () => {
-      gsap.utils.toArray<HTMLElement>(".ab-cloud").forEach(c => {
-        const depth = Number(c.dataset.depth ?? 1);
-        gsap.fromTo(
-          c,
-          { yPercent: 60 * depth },
-          { yPercent: -160 * depth, ease: "none", scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: true } },
-        );
-      });
-    },
-    { scope: root },
-  );
+/** 10 км: үүлсийг нэвтлэн гарах мөч */
+export function About({ active, direction, ready }: Props) {
+  const bank = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!ready || !bank.current) return;
+    if (active) {
+      // Үүлс доороос гарч ирээд хажуугаар өнгөрнө
+      gsap.fromTo(bank.current, { yPercent: 90 * direction, opacity: 1 }, { yPercent: 0, duration: 2, ease: "power2.out" });
+    } else {
+      gsap.to(bank.current, { yPercent: -110 * direction, opacity: 0, duration: 1.6, ease: "power2.in" });
+    }
+  }, [active, direction, ready]);
 
   const facts = [
     { label: "Age", value: `${profile.age}` },
     { label: "Experience", value: profile.experience },
-    { label: "Role", value: profile.role },
-    { label: "Based in", value: profile.location },
+    { label: "Based in", value: "Ulaanbaatar" },
   ];
 
   return (
-    <section id="about" ref={root} className="relative min-h-[130svh] px-5 py-40 md:px-10">
-      <div className="pointer-events-none absolute inset-0" aria-hidden>
+    <>
+      <div ref={bank} className="pointer-events-none fixed inset-0 opacity-0" aria-hidden>
         {BANK.map((c, i) => (
-          <div
-            key={i}
-            data-depth={c.depth}
-            className="ab-cloud cloud"
-            style={{ left: c.left, top: c.top, width: c.w, height: c.h, animationDuration: `${50 + i * 7}s` }}
-          />
+          <div key={i} className="cloud" style={{ left: c.left, top: c.top, width: c.w, height: c.h, animationDuration: `${50 + i * 7}s` }} />
         ))}
       </div>
-
-      <div className="relative grid gap-12 md:grid-cols-12">
-        <div className="md:col-span-7">
-          <StopLabel id="about" />
-          <h2 className="mt-10 font-display text-[clamp(2.2rem,5.5vw,5rem)] font-semibold leading-[1.02]">
-            Hi, I'm {profile.name}.
-          </h2>
-          <p className="measure mt-8 text-lg md:text-xl">{profile.about}</p>
+      <Scene id="about" active={active} direction={direction} ready={ready}>
+        <div className="relative flex h-full flex-col justify-center px-5 md:px-10">
+          <StopLabel id="about" className="rv" />
+          <h2 className="rv mt-8 font-display text-[clamp(2.4rem,6vw,5.5rem)] font-semibold leading-[1.02]">Hi, I'm {profile.name}.</h2>
+          <p className="rv measure mt-6 text-lg md:text-2xl">{profile.about}</p>
+          <dl className="rv mt-12 flex flex-wrap gap-x-14 gap-y-6">
+            {facts.map(f => (
+              <div key={f.label}>
+                <dt className="text-sm text-ink/70">{f.label}</dt>
+                <dd className="font-display text-2xl font-semibold">{f.value}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
-        <dl className="grid grid-cols-2 gap-x-8 gap-y-8 self-end md:col-span-4 md:col-start-9">
-          {facts.map(f => (
-            <div key={f.label} className="border-t border-ink/30 pt-3">
-              <dt className="text-sm text-ink/70">{f.label}</dt>
-              <dd className="mt-1 font-display text-lg font-semibold">{f.value}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-    </section>
+      </Scene>
+    </>
   );
 }

@@ -1,31 +1,34 @@
-import { smallProjects, vesta } from "@/data/portfolio";
-import { Mission } from "./Mission";
+import { smallProjects } from "@/data/portfolio";
+import { Scene } from "../Scene";
+import { StopLabel } from "../StopLabel";
 
-/** Астероидын бүс: Vesta гол төсөл, бусад жижиг төслүүд хажуугаар нь эргэлдэнэ */
-export function Belt() {
+interface Props {
+  active: boolean;
+  direction: 1 | -1;
+  ready: boolean;
+}
+
+/** Астероидын бүсийн гүнд: бие даан хийсэн жижиг төслүүд — эргэн тойронд 3D чулуунууд */
+export function Rocks({ active, direction, ready }: Props) {
   return (
-    <Mission id="belt" mission={vesta} body="vesta" flip>
-      <div className="mt-32">
-        <h3 className="font-display text-[clamp(1.6rem,3.5vw,2.75rem)] font-semibold">Smaller rocks in the same belt</h3>
-        <p className="measure mt-3 text-ink/70">Projects I built on my own while learning. Each one links to its code or a live version.</p>
-        <ul className="mt-12 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-          {smallProjects.map((p, i) => (
-            <li key={p.title} className="group">
-              <a href={p.link} target="_blank" rel="noreferrer" className="block">
-                {p.image && (
-                  <img src={p.image} alt={`${p.title} screenshot`} loading="lazy" className="mb-4 aspect-video w-full rounded-xl object-cover" />
-                )}
-                <div className="flex items-center gap-3">
-                  <span className="rock" style={{ animationDelay: `${i * -0.9}s` }} aria-hidden />
-                  <span className="font-display text-lg font-semibold underline-offset-4 group-hover:underline">{p.title}</span>
-                </div>
-                <p className="mt-2 text-ink/75">{p.description}</p>
-                <p className="mt-2 text-sm text-ink/50">{p.tags.join(", ")}</p>
+    <Scene id="rocks" active={active} direction={direction} ready={ready}>
+      <div data-body="rocks" className="absolute inset-y-0 right-0 w-full md:w-1/2" aria-hidden />
+      <div data-scroll className="relative flex h-full flex-col justify-start overflow-y-auto px-5 pb-24 pt-24 md:justify-center md:px-10 md:pb-0 md:pt-0">
+        <StopLabel id="rocks" className="rv" />
+        <h2 className="rv mt-8 font-display text-[clamp(2.2rem,5vw,4.5rem)] font-semibold leading-[1.02]">Smaller rocks</h2>
+        <p className="rv measure mt-4 text-lg text-ink/85">Projects I built on my own while learning.</p>
+        <ul className="mt-10 grid max-w-5xl gap-x-10 gap-y-7 sm:grid-cols-2 lg:grid-cols-3">
+          {smallProjects.map(p => (
+            <li key={p.title} className="rv">
+              <a href={p.link} target="_blank" rel="noreferrer" className="group block rounded-2xl bg-space/50 p-4 backdrop-blur-sm transition-colors hover:bg-space/80">
+                <span className="font-display text-lg font-semibold underline-offset-4 group-hover:underline">{p.title}</span>
+                <p className="mt-1 text-sm text-ink/75">{p.description}</p>
+                <p className="mt-2 text-xs text-ink/50">{p.tags.join(", ")}</p>
               </a>
             </li>
           ))}
         </ul>
       </div>
-    </Mission>
+    </Scene>
   );
 }

@@ -1,52 +1,31 @@
-import { useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
 import { experience } from "@/data/portfolio";
+import { Scene } from "../Scene";
+import { Split } from "../Split";
 import { StopLabel } from "../StopLabel";
 
-/** Сар: эхний буулт — туршлагын түүх он дарааллаар */
-export function Moon() {
-  const root = useRef<HTMLElement>(null);
+interface Props {
+  active: boolean;
+  direction: 1 | -1;
+  ready: boolean;
+}
 
-  useGSAP(
-    () => {
-      gsap.fromTo(
-        ".mn-line",
-        { scaleY: 0 },
-        { scaleY: 1, ease: "none", scrollTrigger: { trigger: ".mn-log", start: "top 70%", end: "bottom 60%", scrub: true } },
-      );
-    },
-    { scope: root },
-  );
-
+/** Сар: туршлагын түүх он дарааллаар — нэг мөрөөр */
+export function Moon({ active, direction, ready }: Props) {
   return (
-    <section id="moon" ref={root} className="relative px-5 py-32 md:px-10 md:py-44">
-      <div className="grid gap-16 md:grid-cols-12">
-        <div className="md:col-span-6">
-          <StopLabel id="moon" />
-          <h2 className="mt-10 font-display text-[clamp(2.2rem,5.5vw,5rem)] font-semibold leading-[1.02]">Mission log</h2>
-          <p className="measure mt-6 text-ink/80">One year, five missions, in the order they happened.</p>
-
-          <ol className="mn-log relative mt-14 space-y-12 pl-8">
-            <span className="absolute bottom-2 left-[3px] top-2 w-px bg-ink/15" aria-hidden>
-              <span className="mn-line block h-full w-full origin-top bg-dawn" />
-            </span>
-            {experience.map(x => (
-              <li key={x.company} className="relative">
-                <span className="absolute -left-8 top-2 h-[7px] w-[7px] rounded-full bg-dawn" aria-hidden />
-                <p className="text-sm text-ink/60">{x.period}</p>
-                <h3 className="mt-1 font-display text-xl font-semibold md:text-2xl">{x.company}</h3>
-                <p className="text-ink/70">{x.role}</p>
-                <p className="measure mt-2">{x.description}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-
-        <div className="relative hidden md:col-span-6 md:block">
-          {/* Сар хажууд нь тогтож, mission log гүйх тусам ойртоно — 3D (three/Space.ts) */}
-          <div data-body="moon" data-progress="section" className="sticky top-[15vh] h-[70vh]" aria-hidden />
-        </div>
-      </div>
-    </section>
+    <Scene id="moon" active={active} direction={direction} ready={ready}>
+      <Split visual={<div data-body="moon" className="absolute inset-0" aria-hidden />}>
+        <StopLabel id="moon" className="rv" />
+        <h2 className="rv mt-8 font-display text-[clamp(2.2rem,5vw,4.5rem)] font-semibold leading-[1.02]">Mission log</h2>
+        <ol className="relative mt-10 space-y-5 border-l border-ink/20 pl-6">
+          {experience.map(x => (
+            <li key={x.company} className="rv relative">
+              <span className="absolute -left-[28px] top-2 h-[7px] w-[7px] rounded-full bg-dawn" aria-hidden />
+              <p className="text-sm text-ink/60">{x.period}</p>
+              <p className="font-display text-lg font-semibold md:text-xl">{x.company}</p>
+            </li>
+          ))}
+        </ol>
+      </Split>
+    </Scene>
   );
 }

@@ -1,6 +1,7 @@
-import { useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { useEffect, useRef } from "react";
+import { gsap } from "@/lib/gsap";
 import { profile } from "@/data/portfolio";
+import { Scene } from "../Scene";
 
 const CLOUDS = [
   { left: "6%", top: "18%", w: "26vw", h: "8vw", dur: "38s" },
@@ -9,48 +10,66 @@ const CLOUDS = [
   { left: "-6%", top: "56%", w: "22vw", h: "7vw", dur: "44s" },
 ];
 
-/** Улаанбаатарын цэнхэр тэнгэр, Богд хан уул, гэрүүд — аялал эндээс эхэлнэ */
-export function Launch({ ready }: { ready: boolean }) {
-  const root = useRef<HTMLElement>(null);
+interface Props {
+  active: boolean;
+  direction: 1 | -1;
+  ready: boolean;
+}
 
-  // Scroll: газар доошоо холдож, бид дээшээ хөөрнө
-  useGSAP(
-    () => {
-      const st = { trigger: root.current, start: "top top", end: "bottom top", scrub: true } as const;
-      gsap.to(".ln-ground", { yPercent: 75, ease: "none", scrollTrigger: st });
-      gsap.to(".ln-clouds", { yPercent: 45, ease: "none", scrollTrigger: st });
-      gsap.to(".ln-content", { yPercent: 30, opacity: 0, ease: "none", scrollTrigger: st });
-    },
-    { scope: root },
-  );
+/** Улаанбаатарын цэнхэр тэнгэр — аялал эндээс эхэлнэ */
+export function Launch({ active, direction, ready }: Props) {
+  const ground = useRef<SVGSVGElement>(null);
+  const clouds = useRef<HTMLDivElement>(null);
+  const launched = useRef(false);
 
-  // Хөөрөлтийн дараах ганц intro
-  useGSAP(
-    () => {
-      if (!ready) return;
+  useEffect(() => {
+    if (!ready) return;
+    // Хөөрөх мөч: газар чичирч, нэр үсэг үсгээрээ гарна
+    if (!launched.current) {
+      launched.current = true;
       gsap
-        .timeline({ defaults: { ease: "expo.out" } })
-        // Хөдөлгүүр асахад газар чичирнэ
-        .to(".ln-ground", { x: "random(-6, 6)", y: "random(-4, 4)", duration: 0.05, repeat: 14, yoyo: true, ease: "none" }, 0)
-        .to(".ln-ground", { x: 0, y: 0, duration: 0.1 })
-        .from(".ln-ground", { yPercent: 12, duration: 1.6 }, 0)
-        .from(".ln-char", { yPercent: 110, duration: 1.2, stagger: 0.035 }, 0.1)
-        .from(".ln-fade", { opacity: 0, y: 16, duration: 1, stagger: 0.12 }, 0.6);
-    },
-    { scope: root, dependencies: [ready] },
-  );
+        .timeline()
+        .to(ground.current, { x: "random(-6, 6)", y: "random(-4, 4)", duration: 0.05, repeat: 14, yoyo: true, ease: "none" })
+        .to(ground.current, { x: 0, y: 0, duration: 0.1 })
+        .from(".ln-char", { yPercent: 110, duration: 1.2, stagger: 0.035, ease: "expo.out" }, 0.1);
+      return;
+    }
+    // Дээш хөөрөхөд газар, үүл доош холдоно; буцаж ирэхэд эргэж гарна
+    gsap.to(ground.current, { yPercent: active ? 0 : 115, duration: 1.5, ease: "power2.inOut" });
+    gsap.to(clouds.current, { yPercent: active ? 0 : 60, opacity: active ? 1 : 0, duration: 1.5, ease: "power2.inOut" });
+  }, [active, ready]);
 
   return (
-    <section id="launch" ref={root} className="relative h-[100svh] min-h-[600px] overflow-hidden">
-      <div className="ln-clouds pointer-events-none absolute inset-0" aria-hidden>
-        {CLOUDS.map((c, i) => (
-          <div key={i} className="cloud opacity-80" style={{ left: c.left, top: c.top, width: c.w, height: c.h, animationDuration: c.dur }} />
-        ))}
+    <>
+      {/* Газар ба үүл scene-ээс тусдаа: хөөрөхөд харагдсаар доош холдоно */}
+      <div className="pointer-events-none fixed inset-0" aria-hidden>
+        <div ref={clouds} className="absolute inset-0">
+          {CLOUDS.map((c, i) => (
+            <div key={i} className="cloud opacity-80" style={{ left: c.left, top: c.top, width: c.w, height: c.h, animationDuration: c.dur }} />
+          ))}
+        </div>
+        <svg ref={ground} className="absolute inset-x-0 bottom-0 h-[34svh] w-full" viewBox="0 0 1440 320" preserveAspectRatio="xMidYMax slice">
+          <path d="M0 170 L180 120 L330 150 L520 70 L660 130 L820 95 L1000 140 L1180 85 L1440 150 V320 H0Z" fill="#8db4f2" />
+          <path d="M0 220 Q220 170 420 205 T840 190 T1440 200 V320 H0Z" fill="#3a63c4" />
+          <path d="M0 262 Q360 228 720 250 T1440 240 V320 H0Z" fill="#1b3a8a" />
+          {[
+            [210, 248],
+            [262, 252],
+            [980, 238],
+            [1032, 236],
+          ].map(([x, y]) => (
+            <g key={x} transform={`translate(${x} ${y})`}>
+              <path d="M0 18 V8 L16 0 L32 8 V18Z" fill="#eef4ff" />
+              <rect x="13" y="10" width="6" height="8" fill="#e8a24a" />
+            </g>
+          ))}
+        </svg>
       </div>
 
-      <div className="ln-content relative z-10 px-5 pt-[24svh] md:px-10">
-        <p className="ln-fade text-ink/85">Ulaanbaatar, 47.92° N, 106.92° E</p>
-        <h1 className="mt-4 font-display text-[clamp(2.6rem,9.6vw,10rem)] font-extrabold leading-[0.95] tracking-[-0.02em]">
+    <Scene id="launch" active={active} direction={direction} ready={ready}>
+      <div className="relative z-10 flex h-full flex-col justify-center px-5 pb-[18svh] md:px-10">
+        <p className="rv text-ink/85">Ulaanbaatar, 47.92° N, 106.92° E</p>
+        <h1 className="rv mt-4 font-display text-[clamp(2.6rem,9.6vw,10rem)] font-extrabold leading-[0.95] tracking-[-0.02em]">
           <span className="sr-only">{profile.name}</span>
           <span aria-hidden>
             {[...profile.name].map((ch, i) => (
@@ -60,31 +79,15 @@ export function Launch({ ready }: { ready: boolean }) {
             ))}
           </span>
         </h1>
-        <p className="ln-fade measure mt-6 text-lg md:text-xl">{profile.intro}</p>
-        <p className="ln-fade mt-10 flex items-center gap-3 text-ink/85">
+        <p className="rv measure mt-6 text-lg md:text-xl">{profile.intro}</p>
+        <p className="rv mt-10 flex items-center gap-3 text-ink/85">
           <span className="relative block h-10 w-px overflow-hidden bg-ink/30" aria-hidden>
             <span className="absolute inset-x-0 top-0 h-1/2 animate-[scroll-cue_1.8s_ease-in-out_infinite] bg-ink" />
           </span>
           Scroll to lift off
         </p>
       </div>
-
-      <svg className="ln-ground absolute inset-x-0 bottom-0 h-[38svh] w-full" viewBox="0 0 1440 320" preserveAspectRatio="xMidYMax slice" aria-hidden>
-        <path d="M0 170 L180 120 L330 150 L520 70 L660 130 L820 95 L1000 140 L1180 85 L1440 150 V320 H0Z" fill="#8db4f2" />
-        <path d="M0 220 Q220 170 420 205 T840 190 T1440 200 V320 H0Z" fill="#3a63c4" />
-        <path d="M0 262 Q360 228 720 250 T1440 240 V320 H0Z" fill="#1b3a8a" />
-        {[
-          [210, 248],
-          [262, 252],
-          [980, 238],
-          [1032, 236],
-        ].map(([x, y]) => (
-          <g key={x} transform={`translate(${x} ${y})`}>
-            <path d="M0 18 V8 L16 0 L32 8 V18Z" fill="#eef4ff" />
-            <rect x="13" y="10" width="6" height="8" fill="#e8a24a" />
-          </g>
-        ))}
-      </svg>
-    </section>
+    </Scene>
+    </>
   );
 }

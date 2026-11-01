@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { gsap } from "@/lib/gsap";
 import { profile } from "@/data/portfolio";
+import { Scene } from "../Scene";
 import { StopLabel } from "../StopLabel";
 
 interface Day {
@@ -45,9 +46,15 @@ const PLACEHOLDER: Day[] = Array.from({ length: 365 }, (_, i) => ({
   level: 0,
 }));
 
+interface Props {
+  active: boolean;
+  direction: 1 | -1;
+  ready: boolean;
+}
+
 /** Гүн сансар: GitHub дээрх contribution бүр нэг од */
-export function DeepField() {
-  const root = useRef<HTMLElement>(null);
+export function DeepField({ active, direction, ready }: Props) {
+  const grid = useRef<HTMLDivElement>(null);
   const [days, setDays] = useState<Day[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [hover, setHover] = useState<Day | null>(null);
@@ -68,25 +75,19 @@ export function DeepField() {
   const activeDays = useMemo(() => (days ?? []).filter(d => d.count > 0).length, [days]);
   const best = useMemo(() => (days ?? []).reduce<Day | null>((b, d) => (!b || d.count > b.count ? d : b), null), [days]);
 
-  // Өгөгдөл ирэхэд одод зүүнээс баруун тийш асна
-  useGSAP(
-    () => {
-      if (!days) return;
-      gsap.fromTo(
-        ".df-star",
-        { opacity: 0, scale: 0 },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.6,
-          ease: "power2.out",
-          stagger: { grid: [7, weeks.length], axis: "x", from: "start", amount: 2.2 },
-          scrollTrigger: { trigger: ".df-grid", start: "top 80%" },
-        },
-      );
-    },
-    { scope: root, dependencies: [days], revertOnUpdate: true },
-  );
+  // Энэ scene идэвхжих бүрт одод зүүнээс баруун тийш асна
+  useEffect(() => {
+    if (!active || !days || !grid.current) return;
+    const stars = grid.current.querySelectorAll(".df-star");
+    const tween = gsap.fromTo(
+      stars,
+      { opacity: 0, scale: 0 },
+      { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out", delay: 0.9, stagger: { grid: [7, weeks.length], axis: "x", from: "start", amount: 1.6 } },
+    );
+    return () => {
+      tween.kill();
+    };
+  }, [active, days, weeks.length]);
 
   const status = failed
     ? "The live data didn't load. Open my GitHub profile to see the full graph."
@@ -97,70 +98,63 @@ export function DeepField() {
         : "Hover a star to see its day.";
 
   return (
-    <section id="deep" ref={root} className="relative px-5 py-32 md:px-10 md:py-44">
-      <StopLabel id="deep" />
-      <h2 className="mt-10 max-w-4xl font-display text-[clamp(2.2rem,5.5vw,5rem)] font-semibold leading-[1.02]">
-        {days ? `${total} contributions, one star each` : "A year of commits, one star each"}
-      </h2>
-      <p className="measure mt-6 text-ink/80">
-        Every point of light below is a day on my GitHub over the last year. The brighter the star, the more I shipped that day.
-      </p>
+    <Scene id="deep" active={active} direction={direction} ready={ready}>
+      <div data-scroll className="flex h-full flex-col justify-center overflow-y-auto px-5 md:px-10">
+        <StopLabel id="deep" className="rv" />
+        <h2 className="rv mt-8 max-w-4xl font-display text-[clamp(2.2rem,5vw,4.5rem)] font-semibold leading-[1.02]">
+          {days ? `${total} contributions, one star each` : "A year of commits, one star each"}
+        </h2>
 
-      <div className="mt-14 overflow-x-auto pb-2" data-lenis-prevent-wheel>
-        <div className="df-grid gh-grid flex w-max gap-[var(--gap)]">
-          {weeks.map((w, wi) => (
-            <div key={wi} className="grid grid-rows-7 gap-[var(--gap)]">
-              {Array.from({ length: 7 }, (_, di) => {
-                const d = w[di];
-                if (!d) return <span key={di} className="gh-size" />;
-                const s = STAR[d.level];
-                return (
-                  <span
-                    key={di}
-                    className="gh-size grid place-items-center"
-                    onPointerEnter={() => setHover(d)}
-                    onPointerLeave={() => setHover(null)}
-                  >
-                    <span
-                      className="df-star block rounded-full bg-ink"
-                      style={{
-                        width: `${s.size}%`,
-                        height: `${s.size}%`,
-                        opacity: d.level === 0 ? 0.25 : 1,
-                        boxShadow: s.glow ? `0 0 ${s.glow}px rgb(255 214 150 / 0.9)` : undefined,
-                        backgroundColor: d.level >= 3 ? "#ffe3b0" : undefined,
-                      }}
-                    />
-                  </span>
-                );
-              })}
-            </div>
-          ))}
+        <div className="rv mt-10 overflow-x-auto pb-2">
+          <div ref={grid} className="gh-grid flex w-max gap-[var(--gap)]">
+            {weeks.map((w, wi) => (
+              <div key={wi} className="grid grid-rows-7 gap-[var(--gap)]">
+                {Array.from({ length: 7 }, (_, di) => {
+                  const d = w[di];
+                  if (!d) return <span key={di} className="gh-size" />;
+                  const s = STAR[d.level];
+                  return (
+                    <span key={di} className="gh-size grid place-items-center" onPointerEnter={() => setHover(d)} onPointerLeave={() => setHover(null)}>
+                      <span
+                        className="df-star block rounded-full bg-ink"
+                        style={{
+                          width: `${s.size}%`,
+                          height: `${s.size}%`,
+                          opacity: d.level === 0 ? 0.25 : 1,
+                          boxShadow: s.glow ? `0 0 ${s.glow}px rgb(255 214 150 / 0.9)` : undefined,
+                          backgroundColor: d.level >= 3 ? "#ffe3b0" : undefined,
+                        }}
+                      />
+                    </span>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
         </div>
+        <p className="rv mt-3 min-h-[1.6em] text-ink/70" aria-live="polite">
+          {status}
+        </p>
+
+        <dl className="rv mt-10 flex flex-wrap gap-x-14 gap-y-6">
+          <div>
+            <dt className="text-sm text-ink/60">Active days</dt>
+            <dd className="font-display text-3xl font-semibold">{days ? activeDays : "–"}</dd>
+          </div>
+          <div>
+            <dt className="text-sm text-ink/60">Brightest day</dt>
+            <dd className="font-display text-3xl font-semibold">{best ? best.count : "–"}</dd>
+          </div>
+          <div>
+            <dt className="text-sm text-ink/60">Profile</dt>
+            <dd className="mt-1.5">
+              <a href={`https://github.com/${profile.github}`} target="_blank" rel="noreferrer" className="font-display text-lg underline underline-offset-4 hover:text-dawn">
+                github.com/{profile.github}
+              </a>
+            </dd>
+          </div>
+        </dl>
       </div>
-      <p className="mt-4 min-h-[1.6em] text-ink/70" aria-live="polite">
-        {status}
-      </p>
-
-      <dl className="mt-16 flex flex-wrap gap-x-16 gap-y-8">
-        <div>
-          <dt className="text-sm text-ink/60">Active days</dt>
-          <dd className="font-display text-4xl font-semibold">{days ? activeDays : "–"}</dd>
-        </div>
-        <div>
-          <dt className="text-sm text-ink/60">Brightest day</dt>
-          <dd className="font-display text-4xl font-semibold">{best ? best.count : "–"}</dd>
-          {best && <dd className="text-sm text-ink/60">{formatDate(best.date)}</dd>}
-        </div>
-        <div>
-          <dt className="text-sm text-ink/60">Profile</dt>
-          <dd className="mt-2">
-            <a href={`https://github.com/${profile.github}`} target="_blank" rel="noreferrer" className="font-display text-xl underline underline-offset-4 hover:text-dawn">
-              github.com/{profile.github}
-            </a>
-          </dd>
-        </div>
-      </dl>
-    </section>
+    </Scene>
   );
 }
