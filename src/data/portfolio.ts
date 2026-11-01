@@ -1,4 +1,15 @@
 // Portfolio-ийн бүх контент энд байна — өөрийн мэдээллээр солиорой.
+import malchinShot from "@/assets/projects/malchin.jpg";
+import safepathShot from "@/assets/projects/safepath.jpg";
+import soulsShot from "@/assets/projects/soulslike.jpg";
+import dusalShot from "@/assets/projects/dusal.jpg";
+
+/** Төслийн жинхэнэ screenshot ба түүнийг ямар төхөөрөмжийн хүрээнд харуулах */
+export interface Shot {
+  src: string;
+  device: "browser" | "phone";
+  url: string;
+}
 
 export interface Profile {
   name: string;
@@ -25,6 +36,8 @@ export interface Project {
   /** Картын генератив арт-д хэрэглэх 3 өнгө */
   palette: [string, string, string];
   link: string;
+  /** Байвал генератив артын оронд жинхэнэ зураг харуулна */
+  image?: string;
 }
 
 export interface StackGroup {
@@ -57,6 +70,7 @@ export interface HardwareProject {
   stats: { value: string; label: string }[];
   repo: string;
   site: string;
+  shot: Shot;
 }
 
 export interface Social {
@@ -197,13 +211,14 @@ export const projects: Project[] = [
   },
   {
     id: "06",
-    title: "Soulslike",
+    title: "Mongol Souls",
     category: "Game",
     year: "2026",
-    description: "A small action game prototype in the browser, written fully in TypeScript.",
+    description: "A soulslike action game prototype in the browser, written fully in TypeScript.",
     tags: ["Phaser", "Vite", "TypeScript"],
     palette: ["#ffcc00", "#fff1a8", "#1f1500"],
-    link: gh("soulslike"),
+    link: "https://soulslike-sigma.vercel.app",
+    image: soulsShot,
   },
 ];
 
@@ -236,6 +251,7 @@ export const hardware: HardwareProject = {
   ],
   repo: "https://github.com/pinecone-studio/pinequest-s5-episode-2-team-3",
   site: "https://dusal.bbek3201.workers.dev",
+  shot: { src: dusalShot, device: "phone", url: "dusal.bbek3201.workers.dev" },
 };
 
 export type FeaturedVisual = "vesta" | "safepath" | "malchin";
@@ -253,6 +269,8 @@ export interface FeaturedProject {
   /** Панелын өнгө: дэвсгэр, текст, онцлох өнгө */
   theme: { bg: string; fg: string; accent: string };
   visual: FeaturedVisual;
+  /** Байвал анимацтай визуалын оронд жинхэнэ screenshot харуулна */
+  shot?: Shot;
 }
 
 export const featured: FeaturedProject[] = [
@@ -298,9 +316,13 @@ export const featured: FeaturedProject[] = [
       { value: "6", label: "milestones" },
       { value: "0 net", label: "offline routing" },
     ],
-    links: [{ label: "View repo", href: "https://github.com/pinecone-studio/pinequest-s5-episode-1-team-2" }],
+    links: [
+      { label: "Live app", href: "https://safepath-indol.vercel.app/" },
+      { label: "View repo", href: "https://github.com/pinecone-studio/pinequest-s5-episode-1-team-2" },
+    ],
     theme: { bg: "#e6fff1", fg: "#04261a", accent: "#00a86b" },
     visual: "safepath",
+    shot: { src: safepathShot, device: "phone", url: "safepath-indol.vercel.app" },
   },
   {
     id: "03",
@@ -320,9 +342,13 @@ export const featured: FeaturedProject[] = [
       { value: "153", label: "culture quiz Qs" },
       { value: "5", label: "livestock types" },
     ],
-    links: [{ label: "View repo", href: "https://github.com/btsolmon/Malchin" }],
+    links: [
+      { label: "Play it", href: "https://malchin-zeta.vercel.app" },
+      { label: "View repo", href: "https://github.com/btsolmon/Malchin" },
+    ],
     theme: { bg: "#1a1030", fg: "#fff4e0", accent: "#ffb347" },
     visual: "malchin",
+    shot: { src: malchinShot, device: "browser", url: "malchin-zeta.vercel.app" },
   },
 ];
 
