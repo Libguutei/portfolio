@@ -25,7 +25,7 @@ export function Orbit() {
       </div>
 
       {/* Дэлхий энэ цэгийн доор байрлана — 3D (three/Space.ts) */}
-      <div data-body="earth" data-progress="section" className="absolute inset-x-0 bottom-0 h-[40svh]" aria-hidden />
+      <div data-body="earth" data-progress="section" className="absolute bottom-0 left-0 right-0 h-[40svh] md:left-1/2" aria-hidden />
 
       {/* Дагуулуудын шошго: Space.ts байрлалыг нь фрэйм бүрт шинэчилнэ */}
       <div className="pointer-events-none fixed inset-0 z-30 overflow-hidden" aria-hidden>

@@ -202,7 +202,7 @@ export class Space {
       group.add(earth, clouds, this.atmosphere(R * 1.05, 0x5aa8ff, 2.4));
       group.rotation.z = 0.25;
       body.spin.push([earth, 0.02], [clouds, 0.032]);
-      Object.assign(body, { far: 60, near: 38, drop: R * 0.8, pinY: 0.7, recede: true });
+      Object.assign(body, { far: 70, near: 36, drop: R * 0.3, pinY: 0.58, recede: true });
 
       // Stack-ийн 4 дагуул тойрог замаар эргэнэ
       const labels = Array.from(document.querySelectorAll<HTMLElement>("[data-sat]"));
@@ -383,15 +383,20 @@ export class Space {
       const scope = el.dataset.progress === "section" ? (el.closest("section") ?? el) : el;
       const r = scope.getBoundingClientRect();
       const p = (vh - r.top) / (vh + r.height);
+      // Дэлхий: хэсгийн эхэнд ойртож, ихэнх хугацаанд том байгаад, төгсгөлд нь холдоно
       const depth = body.recede
-        ? p < 0.5
-          ? THREE.MathUtils.lerp(body.far, body.near, smooth(clamp01(p * 2)))
-          : THREE.MathUtils.lerp(body.near, 220, smooth(clamp01((p - 0.5) * 2)))
+        ? p < 0.72
+          ? THREE.MathUtils.lerp(body.far, body.near, smooth(clamp01(p / 0.4)))
+          : THREE.MathUtils.lerp(body.near, 220, smooth(clamp01((p - 0.72) / 0.28)))
         : THREE.MathUtils.lerp(body.far, body.near, smooth(clamp01(p * 1.25)));
 
       // Элементийн дэлгэц дээрх төвийг 3D орон зайд буулгана
       let cy = rect.top + rect.height / 2;
-      if (body.pinY !== undefined) cy = Math.max(cy, vh * body.pinY);
+      if (body.pinY !== undefined) {
+        // Холдох үедээ доошоо живж дэлгэцээс гарна — бид дээшээ нисч байна
+        const sink = body.recede ? smooth(clamp01((p - 0.72) / 0.28)) * 0.6 : 0;
+        cy = Math.max(cy, vh * (body.pinY + sink));
+      }
       const ndcX = ((rect.left + rect.width / 2) / vw) * 2 - 1;
       const ndcY = -(cy / vh) * 2 + 1;
       this.tmp.set(ndcX, ndcY, 0.5).unproject(this.camera).sub(this.camera.position).normalize();
