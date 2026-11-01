@@ -54,15 +54,15 @@ export function Signal({ active, direction, ready }: Props) {
       <Scene id="signal" active={active} direction={direction} ready={ready}>
         <Split visual={<div data-body="sun" className="absolute inset-0" aria-hidden />}>
           <StopLabel id="signal" className="rv" />
-          <h2 className="rv mt-8 font-display text-[clamp(2.6rem,6.5vw,6rem)] font-extrabold leading-[0.98]">Send a signal</h2>
+          <h2 className="rv mt-8 font-display text-[clamp(2.6rem,6.5vw,6rem)] font-extrabold leading-[0.98]">Дохио илгээ</h2>
           <p className="rv measure mt-5 text-lg text-ink/85">
-            Sunlight takes eight minutes to reach Ulaanbaatar. An email to me gets there faster.
+            Нарны гэрэл Улаанбаатарт хүрэхэд найман минут зарцуулдаг. Над руу бичсэн имэйл үүнээс ч хурдан хүрнэ.
           </p>
 
           <div className="rv mt-10 flex flex-wrap items-center gap-3">
             <Magnetic strength={0.3}>
               <a href={`mailto:${profile.email}`} className="block rounded-full bg-dawn px-8 py-4 font-display font-semibold text-space">
-                Email me
+                Имэйл бичих
               </a>
             </Magnetic>
             <button
@@ -70,7 +70,7 @@ export function Signal({ active, direction, ready }: Props) {
               className="rounded-full border border-ink/40 bg-space/30 px-6 py-4 backdrop-blur transition-colors hover:border-ink"
               aria-live="polite"
             >
-              {copied ? "Address copied" : "Copy address"}
+              {copied ? "Хаяг хуулагдлаа" : "Хаяг хуулах"}
             </button>
           </div>
 
@@ -85,9 +85,9 @@ export function Signal({ active, direction, ready }: Props) {
           </ul>
 
           <p className="rv mt-14 text-sm text-ink/60">
-            It's {time} in Ulaanbaatar.{" "}
+            Улаанбаатарт одоо {time} болж байна.{" "}
             <button onClick={() => goTo(0)} className="underline underline-offset-4 hover:text-ink">
-              Fly back home
+              Гэр лүүгээ буцах
             </button>
           </p>
         </Split>

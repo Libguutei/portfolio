@@ -278,12 +278,14 @@ export class Space {
     }
 
     if (kind === "rocks") {
-      // Бүсийн гүн: том талбайд тархсан чулуунууд дунд нисэнэ
-      const field = this.asteroidField(170, 5, 18, 8, 0.5, 2.6);
-      group.add(field.mesh);
+      // Астероидын бүс: дэлгэцийг хөндлөн огтлох хавтгай, өргөн цагираг — чулуу ба тоосноос бүрдэнэ
+      const field = this.asteroidField(650, 13, 30, 1.8, 0.3, 2.4);
+      const dust = this.dustRing(2600, 11, 34, 1.2);
+      group.add(field.mesh, dust);
+      body.spin.push([dust, 0.015]);
       body.tick = field.update;
-      group.rotation.x = 0.5;
-      Object.assign(body, { far: 70, near: 34 });
+      group.rotation.set(0.2, 0, -0.14);
+      Object.assign(body, { far: 110, near: 52 });
     }
 
     if (kind === "europa") {
@@ -365,6 +367,23 @@ export class Space {
     return { mesh, update };
   }
 
+  /** Бүсийн нарийн тоос: олон жижиг цэг цагираг хэлбэрээр */
+  private dustRing(count: number, rMin: number, rMax: number, spreadY: number) {
+    const pos = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      const a = Math.random() * Math.PI * 2;
+      // Дунд хэсэгтээ шигүү байхаар радиусыг төвлөрүүлнэ
+      const r = rMin + ((Math.random() + Math.random()) / 2) * (rMax - rMin);
+      pos.set([Math.cos(a) * r, (Math.random() - 0.5) * spreadY, Math.sin(a) * r], i * 3);
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    return new THREE.Points(
+      g,
+      new THREE.PointsMaterial({ color: 0xc9b49a, size: 0.14, map: starSprite(), transparent: true, opacity: 0.7, depthWrite: false }),
+    );
+  }
+
   private satellite() {
     const g = new THREE.Group();
     const bodyMat = new THREE.MeshStandardMaterial({ color: 0xd9dde8, metalness: 0.6, roughness: 0.4 });
@@ -399,7 +418,7 @@ export class Space {
     this.camera.updateMatrixWorld();
 
     // Одод: үүлсийг давж гарахаас эхлэн тодорно
-    this.updateStars(dt, clamp01((progress - 0.5) / 1.3));
+    this.updateStars(dt, clamp01((progress + 0.5) / 1.3));
 
     // Гарагууд: scene-ийнхээ дугаараар ирж, өнгөрнө
     this.labelsOn = false;

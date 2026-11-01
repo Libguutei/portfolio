@@ -6,7 +6,6 @@ import { SpaceCanvas } from "./components/SpaceCanvas";
 import { Countdown } from "./components/Countdown";
 import { Altimeter } from "./components/Altimeter";
 import { Nav } from "./components/Nav";
-import { Launch } from "./components/sections/Launch";
 import { About } from "./components/sections/About";
 import { Orbit } from "./components/sections/Orbit";
 import { Moon } from "./components/sections/Moon";
@@ -36,17 +35,16 @@ export function App() {
       <Nav current={scene.index} />
       <Altimeter current={scene.index} />
       <main className="relative h-[100svh] overflow-hidden">
-        <Launch {...props(0)} />
-        <About {...props(1)} />
-        <Orbit {...props(2)} />
-        <Moon {...props(3)} />
-        <Mission id="mars" mission={malchin} body="mars" {...props(4)} />
-        <Mission id="belt" mission={vesta} body="vesta" flip {...props(5)} />
-        <Rocks {...props(6)} />
-        <Europa {...props(7)} />
-        <Mission id="saturn" mission={safepath} body="saturn" flip {...props(8)} />
-        <DeepField {...props(9)} />
-        <Signal {...props(10)} />
+        <About {...props(0)} />
+        <Orbit {...props(1)} />
+        <Moon {...props(2)} />
+        <Mission id="mars" mission={malchin} body="mars" {...props(3)} />
+        <Mission id="belt" mission={vesta} body="vesta" flip {...props(4)} />
+        <Rocks {...props(5)} />
+        <Europa {...props(6)} />
+        <Mission id="saturn" mission={safepath} body="saturn" flip {...props(7)} />
+        <DeepField {...props(8)} />
+        <Signal {...props(9)} />
       </main>
     </>
   );

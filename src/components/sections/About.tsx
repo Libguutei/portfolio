@@ -32,9 +32,9 @@ export function About({ active, direction, ready }: Props) {
   }, [active, direction, ready]);
 
   const facts = [
-    { label: "Age", value: `${profile.age}` },
-    { label: "Experience", value: profile.experience },
-    { label: "Based in", value: "Ulaanbaatar" },
+    { label: "Нас", value: `${profile.age}` },
+    { label: "Туршлага", value: profile.experience },
+    { label: "Байршил", value: "Улаанбаатар" },
   ];
 
   return (
@@ -47,7 +47,7 @@ export function About({ active, direction, ready }: Props) {
       <Scene id="about" active={active} direction={direction} ready={ready}>
         <div className="relative flex h-full flex-col justify-center px-5 md:px-10">
           <StopLabel id="about" className="rv" />
-          <h2 className="rv mt-8 font-display text-[clamp(2.4rem,6vw,5.5rem)] font-semibold leading-[1.02]">Hi, I'm {profile.name}.</h2>
+          <h2 className="rv mt-8 font-display text-[clamp(2.4rem,6vw,5.5rem)] font-semibold leading-[1.02]">Сайн байна уу, би {profile.name}.</h2>
           <p className="rv measure mt-6 text-lg md:text-2xl">{profile.about}</p>
           <dl className="rv mt-12 flex flex-wrap gap-x-14 gap-y-6">
             {facts.map(f => (
@@ -57,6 +57,12 @@ export function About({ active, direction, ready }: Props) {
               </div>
             ))}
           </dl>
+          <p className="rv mt-12 flex items-center gap-3 text-ink/85">
+            <span className="relative block h-10 w-px overflow-hidden bg-ink/30" aria-hidden>
+              <span className="absolute inset-x-0 top-0 h-1/2 animate-[scroll-cue_1.8s_ease-in-out_infinite] bg-ink" />
+            </span>
+            Scroll to lift off
+          </p>
         </div>
       </Scene>
     </>

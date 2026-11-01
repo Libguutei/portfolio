@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 
-const STEPS = ["3", "2", "1", "Liftoff"];
+const STEPS = ["3", "2", "1", "Хөөрлөө"];
 
 /** Хуудас нээгдэх ганц мөч: 3, 2, 1, хөөрөлт — дараа нь hero гарч ирнэ */
 export function Countdown({ onLiftoff }: { onLiftoff: () => void }) {
@@ -29,7 +29,7 @@ export function Countdown({ onLiftoff }: { onLiftoff: () => void }) {
     <div ref={root} className="fixed inset-0 z-[100] grid place-items-center bg-[#2f6cf6]/40 backdrop-blur-sm" aria-hidden>
       {STEPS.map(s => (
         <span key={s} className="cd-step col-start-1 row-start-1 font-display text-[22vw] font-extrabold opacity-0 md:text-[14vw]">
-          {s === "Liftoff" ? <span className="text-[9vw] md:text-[6vw]">{s}</span> : s}
+          {s === "Хөөрлөө" ? <span className="text-[9vw] md:text-[6vw]">{s}</span> : s}
         </span>
       ))}
     </div>

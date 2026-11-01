@@ -19,8 +19,8 @@ export function Orbit({ active, direction, ready }: Props) {
       <Scene id="orbit" active={active} direction={direction} ready={ready}>
         <Split visual={<div data-body="earth" className="absolute inset-0" aria-hidden />}>
           <StopLabel id="orbit" className="rv" />
-          <h2 className="rv mt-8 font-display text-[clamp(2.2rem,5vw,4.5rem)] font-semibold leading-[1.02]">My stack in orbit</h2>
-          <p className="rv measure mt-5 text-lg text-ink/85">Every satellite around the Earth is a tool I build with.</p>
+          <h2 className="rv mt-8 font-display text-[clamp(2.2rem,5vw,4.5rem)] font-semibold leading-[1.02]">Тойрог зам дахь stack</h2>
+          <p className="rv measure mt-5 text-lg text-ink/85">Дэлхийг тойрох хиймэл дагуул бүр миний ашигладаг нэг технологи.</p>
           <ul className="rv mt-10 grid grid-cols-2 gap-x-8 gap-y-3">
             {stack.map((g, gi) => (
               <li key={g.title} className="flex items-center gap-3">

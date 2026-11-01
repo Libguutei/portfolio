@@ -37,7 +37,7 @@ function toWeeks(days: Day[]): (Day | null)[][] {
 }
 
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
+  return new Date(iso).toLocaleDateString("mn-MN", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
 }
 
 const PLACEHOLDER: Day[] = Array.from({ length: 365 }, (_, i) => ({
@@ -90,19 +90,19 @@ export function DeepField({ active, direction, ready }: Props) {
   }, [active, days, weeks.length]);
 
   const status = failed
-    ? "The live data didn't load. Open my GitHub profile to see the full graph."
+    ? "Шууд өгөгдөл ачаалагдсангүй. Бүтэн графикийг GitHub профайл дээрээс минь хараарай."
     : !days
-      ? "Loading live contributions from GitHub."
+      ? "GitHub-ээс contribution-уудыг ачаалж байна."
       : hover
-        ? `${hover.count} contribution${hover.count === 1 ? "" : "s"} on ${formatDate(hover.date)}`
-        : "Hover a star to see its day.";
+        ? `${formatDate(hover.date)}: ${hover.count} contribution`
+        : "Од дээр хулганаа аваачвал тэр өдрийг харуулна.";
 
   return (
     <Scene id="deep" active={active} direction={direction} ready={ready}>
       <div data-scroll className="flex h-full flex-col justify-center overflow-y-auto px-5 md:px-10">
         <StopLabel id="deep" className="rv" />
         <h2 className="rv mt-8 max-w-4xl font-display text-[clamp(2.2rem,5vw,4.5rem)] font-semibold leading-[1.02]">
-          {days ? `${total} contributions, one star each` : "A year of commits, one star each"}
+          {days ? `${total} contribution, нэг бүр нь нэг од` : "Нэг жилийн commit, нэг бүр нь нэг од"}
         </h2>
 
         <div className="rv mt-10 overflow-x-auto pb-2">
@@ -138,15 +138,15 @@ export function DeepField({ active, direction, ready }: Props) {
 
         <dl className="rv mt-10 flex flex-wrap gap-x-14 gap-y-6">
           <div>
-            <dt className="text-sm text-ink/60">Active days</dt>
+            <dt className="text-sm text-ink/60">Идэвхтэй өдөр</dt>
             <dd className="font-display text-3xl font-semibold">{days ? activeDays : "–"}</dd>
           </div>
           <div>
-            <dt className="text-sm text-ink/60">Brightest day</dt>
+            <dt className="text-sm text-ink/60">Хамгийн тод өдөр</dt>
             <dd className="font-display text-3xl font-semibold">{best ? best.count : "–"}</dd>
           </div>
           <div>
-            <dt className="text-sm text-ink/60">Profile</dt>
+            <dt className="text-sm text-ink/60">Профайл</dt>
             <dd className="mt-1.5">
               <a href={`https://github.com/${profile.github}`} target="_blank" rel="noreferrer" className="font-display text-lg underline underline-offset-4 hover:text-dawn">
                 github.com/{profile.github}

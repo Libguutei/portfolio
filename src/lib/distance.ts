@@ -1,8 +1,8 @@
 /** Дэлхийгээс хэдэн км зайд байгааг уншихад амар хэлбэрт оруулна */
 export function formatKm(km: number): string {
-  if (km < 1_000_000) return `${Math.round(km).toLocaleString("en-US")} km`;
-  if (km < 1_000_000_000) return `${(km / 1_000_000).toFixed(1)} million km`;
-  return `${(km / 1_000_000_000).toFixed(2)} billion km`;
+  if (km < 1_000_000) return `${Math.round(km).toLocaleString("en-US")} км`;
+  if (km < 1_000_000_000) return `${(km / 1_000_000).toFixed(1)} сая км`;
+  return `${(km / 1_000_000_000).toFixed(2)} тэрбум км`;
 }
 
 /** Хоёр зайн хооронд логарифм масштабаар шилжинэ: 0 км → тэрбум км жигд мэдрэгдэнэ */

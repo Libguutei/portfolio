@@ -26,11 +26,11 @@ export function Altimeter({ current }: { current: number }) {
   const place = stops[current]?.place ?? "";
 
   return (
-    <aside className="pointer-events-none fixed inset-0 z-40" aria-label="Distance from Earth">
+    <aside className="pointer-events-none fixed inset-0 z-40" aria-label="Дэлхийгээс алслагдсан зай">
       <div className="absolute bottom-6 right-8 hidden rounded-2xl bg-space/70 px-4 py-2.5 text-right backdrop-blur md:block">
         <div className="text-sm text-ink/60">{place}</div>
         <span ref={readout} className="font-display text-lg font-semibold">
-          0 km
+          0 км
         </span>
       </div>
       <div className="absolute right-5 top-1/2 hidden -translate-y-1/2 items-stretch gap-3 md:flex">
@@ -43,7 +43,7 @@ export function Altimeter({ current }: { current: number }) {
               <button
                 onClick={() => goTo(i)}
                 className={`block h-2 w-2 rounded-full transition-all ${i === current ? "scale-150 bg-dawn" : i < current ? "bg-dawn/70" : "bg-ink/30 hover:bg-ink/70"}`}
-                aria-label={`Fly to ${s.place}`}
+                aria-label={`${s.place} руу нисэх`}
                 aria-current={i === current ? "step" : undefined}
                 title={s.place}
               />

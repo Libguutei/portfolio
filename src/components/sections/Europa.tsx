@@ -11,7 +11,7 @@ interface Props {
 export function Europa(props: Props) {
   // Ус ууснаас утсанд хүрэх хүртэлх дамжлага
   const pipeline = (
-    <ol className="rv mt-6 flex flex-wrap items-center gap-y-2 text-sm" aria-label="How a sip travels">
+    <ol className="rv mt-6 flex flex-wrap items-center gap-y-2 text-sm" aria-label="Балгалт хэрхэн дамждаг вэ">
       {dusal.pipeline.map((p, i) => (
         <li key={p.name} className="flex items-center">
           <span className="rounded-full border border-[#8fd3ff]/50 bg-space/40 px-3 py-1" title={p.detail}>

@@ -8,7 +8,7 @@ export function StopLabel({ id, className = "" }: { id: string; className?: stri
   return (
     <p className={`flex items-center gap-3 text-ink/70 ${className}`}>
       <span className="h-px w-8 bg-dawn" aria-hidden />
-      {stop.place}, {formatKm(stop.km)} from Earth
+      {stop.place}, Дэлхийгээс {formatKm(stop.km)}
     </p>
   );
 }

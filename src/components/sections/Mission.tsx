@@ -30,7 +30,7 @@ export function Mission({ id, mission, body, flip = false, active, direction, re
       {shot && (
         <DeviceFrame
           shot={shot}
-          alt={`${mission.title} screenshot`}
+          alt={`${mission.title} дэлгэцийн зураг`}
           className={
             shot.device === "phone"
               ? "rv absolute bottom-[8%] right-[6%] hidden w-[30%] max-w-[200px] rotate-6 md:block"
@@ -52,7 +52,7 @@ export function Mission({ id, mission, body, flip = false, active, direction, re
         </p>
         <p className="rv measure mt-5 text-ink/85">{mission.description}</p>
         <p className="rv measure mt-3 text-ink/60">
-          <span className="text-ink">My part: </span>
+          <span className="text-ink">Миний хэсэг: </span>
           {mission.part}
         </p>
         {extra}

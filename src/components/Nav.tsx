@@ -40,21 +40,21 @@ export function Nav({ current }: { current: number }) {
           </button>
           <div className="flex items-center gap-6">
             <button onClick={() => go(stops.length - 1)} className="hidden text-ink/80 transition-colors hover:text-ink md:block">
-              Contact
+              Холбоо барих
             </button>
             <button
               onClick={() => toggle()}
               className="relative z-[70] rounded-full border border-ink/40 bg-space/20 px-5 py-2 text-sm backdrop-blur transition-colors hover:border-ink"
               aria-expanded={open}
             >
-              {open ? "Close" : "Flight plan"}
+              {open ? "Хаах" : "Нислэгийн төлөвлөгөө"}
             </button>
           </div>
         </nav>
       </header>
 
       <div ref={menu} className="invisible fixed inset-0 z-[50] overflow-y-auto bg-space/95 px-5 pb-10 pt-28 backdrop-blur md:px-10" data-scroll>
-        <p className="fp-item mb-8 text-ink/60">From Ulaanbaatar out to the edge of the solar system, then home to the Sun.</p>
+        <p className="fp-item mb-8 text-ink/60">Үүлсийн дээрээс нарны аймгийн зах хүртэл, тэгээд Нар руу.</p>
         <ol className="max-w-3xl">
           {stops.map((s, i) => (
             <li key={s.id} className="fp-item border-t border-ink/15">

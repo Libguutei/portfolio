@@ -14,7 +14,6 @@
 :root {
   --sky-top: #2f6cf6;
   --sky-bottom: #bfe3ff;
-  --sun: 1;
 }
 
 html {
@@ -68,17 +67,6 @@ button {
   inset: 0;
   z-index: -2;
   background: linear-gradient(to bottom, var(--sky-top), var(--sky-bottom));
-}
-
-.sky-sun {
-  position: absolute;
-  right: 12vw;
-  top: 14vh;
-  width: 36vmin;
-  aspect-ratio: 1;
-  border-radius: 9999px;
-  background: radial-gradient(circle, rgb(255 236 200 / 0.95), rgb(255 196 107 / 0.35) 35%, transparent 70%);
-  opacity: var(--sun);
 }
 
 
