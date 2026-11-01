@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { experience } from "@/data/portfolio";
-import { Planet } from "../Planet";
 import { StopLabel } from "../StopLabel";
 
 /** Сар: эхний буулт — туршлагын түүх он дарааллаар */
@@ -10,16 +9,6 @@ export function Moon() {
 
   useGSAP(
     () => {
-      gsap.fromTo(
-        ".mn-moon",
-        { scale: 0.35, yPercent: 30 },
-        {
-          scale: 1,
-          yPercent: -15,
-          ease: "none",
-          scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: true },
-        },
-      );
       gsap.fromTo(
         ".mn-line",
         { scaleY: 0 },
@@ -54,11 +43,8 @@ export function Moon() {
         </div>
 
         <div className="relative hidden md:col-span-6 md:block">
-          <div className="sticky top-[15vh] grid h-[70vh] place-items-center">
-            <div className="mn-moon w-[min(34vw,440px)]">
-              <Planet kind="moon" className="w-full" />
-            </div>
-          </div>
+          {/* Сар хажууд нь тогтож, mission log гүйх тусам ойртоно — 3D (three/Space.ts) */}
+          <div data-body="moon" data-progress="section" className="sticky top-[15vh] h-[70vh]" aria-hidden />
         </div>
       </div>
     </section>

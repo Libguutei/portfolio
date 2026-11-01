@@ -1,6 +1,7 @@
 import { useRef, type ReactNode } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import type { Mission as MissionData } from "@/data/portfolio";
+import type { BodyKind } from "@/three/Space";
 import { StopLabel } from "../StopLabel";
 import { DeviceFrame } from "../DeviceFrame";
 import { Magnetic } from "../motion/Magnetic";
@@ -8,31 +9,19 @@ import { Magnetic } from "../motion/Magnetic";
 interface MissionProps {
   id: string;
   mission: MissionData;
-  /** Гарагийн дүрс — scroll хийх тусам алсаас ойртоно */
-  planet: ReactNode;
+  /** Энэ хэсэгт 3D сансарт гарч ирэх гараг */
+  body: BodyKind;
   /** true бол гараг зүүн талд */
   flip?: boolean;
   children?: ReactNode;
 }
 
-/** Нэг гараг дээрх нэг төсөл: зүүн/баруун талд гараг, нөгөө талд түүх */
-export function Mission({ id, mission, planet, flip = false, children }: MissionProps) {
+/** Нэг гараг дээрх нэг төсөл: нэг талд 3D гараг ойртож ирнэ, нөгөө талд түүх */
+export function Mission({ id, mission, body, flip = false, children }: MissionProps) {
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
     () => {
-      // Гараг алсаас ойртож ирээд, өнгөрөхдөө дээшээ гарна
-      gsap.fromTo(
-        ".ms-planet",
-        { scale: 0.3, yPercent: 40, rotate: -10 },
-        {
-          scale: 1.08,
-          yPercent: -25,
-          rotate: 6,
-          ease: "none",
-          scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: true },
-        },
-      );
       gsap.fromTo(
         ".ms-device",
         { yPercent: 30 },
@@ -48,7 +37,9 @@ export function Mission({ id, mission, planet, flip = false, children }: Mission
     <section id={id} ref={root} className="relative px-5 py-32 md:px-10 md:py-44">
       <div className="grid items-center gap-16 md:grid-cols-12 md:gap-8">
         <div className={`relative h-[60svh] md:col-span-6 md:h-[80svh] ${flip ? "md:order-first" : "md:order-last"}`}>
-          <div className={`ms-planet absolute inset-0 grid justify-items-center ${shot?.device === "browser" ? "items-start pt-[2%]" : "items-center"}`}>{planet}</div>
+          {/* 3D гараг энэ хайрцгийн төвд байрлана (three/Space.ts) */}
+          <div data-body={body} className={`absolute inset-x-0 ${shot?.device === "browser" ? "top-0 h-1/2" : "inset-y-0"}`} aria-hidden />
+
           {shot && (
             <DeviceFrame
               shot={shot}

@@ -1,7 +1,6 @@
 import { useRef, type RefObject } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { dusal } from "@/data/portfolio";
-import { Planet } from "../Planet";
 import { StopLabel } from "../StopLabel";
 import { DeviceFrame } from "../DeviceFrame";
 import { Magnetic } from "../motion/Magnetic";
@@ -49,10 +48,6 @@ export function Europa() {
 
   useGSAP(
     () => {
-      const pass = { trigger: root.current, start: "top bottom", end: "bottom top", scrub: true } as const;
-      gsap.fromTo(".eu-jupiter", { yPercent: 10, scale: 0.8 }, { yPercent: -20, scale: 1.05, ease: "none", scrollTrigger: pass });
-      gsap.fromTo(".eu-moon", { yPercent: 60, scale: 0.4 }, { yPercent: -40, scale: 1, ease: "none", scrollTrigger: pass });
-
       gsap.fromTo(
         ".eu-water",
         { height: "88%" },
@@ -81,12 +76,6 @@ export function Europa() {
 
   return (
     <section id="europa" ref={root} className="relative overflow-hidden px-5 py-32 md:px-10 md:py-44">
-      <div className="pointer-events-none absolute -right-[30vw] -top-[10vw] w-[80vw] opacity-40 md:-right-[22vw] md:w-[50vw]" aria-hidden>
-        <div className="eu-jupiter">
-          <Planet kind="jupiter" className="w-full" />
-        </div>
-      </div>
-
       <div className="relative grid gap-12 md:grid-cols-12">
         <div className="md:col-span-7">
           <StopLabel id="europa" />
@@ -97,9 +86,8 @@ export function Europa() {
           </p>
           <p className="measure mt-6 text-ink/80">{dusal.description}</p>
         </div>
-        <div className="eu-moon relative hidden w-[min(22vw,260px)] self-center justify-self-center md:col-span-5 md:block">
-          <Planet kind="europa" className="w-full" />
-        </div>
+        {/* Европа ба ард нь Бархасбадь — 3D (three/Space.ts) */}
+        <div data-body="europa" className="h-[40svh] md:col-span-5 md:h-auto" aria-hidden />
       </div>
 
       <div className="eu-story relative mt-24 grid gap-16 md:grid-cols-12">

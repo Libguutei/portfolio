@@ -6,7 +6,7 @@ import { Sky } from "./components/Sky";
 import { Countdown } from "./components/Countdown";
 import { Altimeter } from "./components/Altimeter";
 import { Nav } from "./components/Nav";
-import { Planet } from "./components/Planet";
+import { SpaceCanvas } from "./components/SpaceCanvas";
 import { Launch } from "./components/sections/Launch";
 import { About } from "./components/sections/About";
 import { Orbit } from "./components/sections/Orbit";
@@ -39,6 +39,7 @@ export function App() {
   return (
     <>
       <Sky />
+      <SpaceCanvas />
       <Countdown onLiftoff={() => setReady(true)} />
       <Nav />
       <Altimeter />
@@ -47,14 +48,14 @@ export function App() {
         <About />
         <Orbit />
         <Moon />
-        <Mission id="mars" mission={malchin} planet={<Planet kind="mars" className="w-[min(80%,520px)]" />} />
+        <Mission id="mars" mission={malchin} body="mars" />
         <Belt />
         <Europa />
         <Mission
           id="saturn"
           mission={safepath}
           flip
-          planet={<Planet kind="saturn" className="w-[min(52%,340px)]" />}
+          body="saturn"
         />
         <DeepField />
         <Signal />

@@ -30,6 +30,9 @@ export function Launch({ ready }: { ready: boolean }) {
       if (!ready) return;
       gsap
         .timeline({ defaults: { ease: "expo.out" } })
+        // Хөдөлгүүр асахад газар чичирнэ
+        .to(".ln-ground", { x: "random(-6, 6)", y: "random(-4, 4)", duration: 0.05, repeat: 14, yoyo: true, ease: "none" }, 0)
+        .to(".ln-ground", { x: 0, y: 0, duration: 0.1 })
         .from(".ln-ground", { yPercent: 12, duration: 1.6 }, 0)
         .from(".ln-char", { yPercent: 110, duration: 1.2, stagger: 0.035 }, 0.1)
         .from(".ln-fade", { opacity: 0, y: 16, duration: 1, stagger: 0.12 }, 0.6);
