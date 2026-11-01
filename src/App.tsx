@@ -1,23 +1,24 @@
-import { useEffect, useRef, useState } from "react";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { useEffect, useState } from "react";
+import { ScrollTrigger } from "@/lib/gsap";
 import { initSmoothScroll, setScrollLocked } from "@/lib/scroll";
-import { Preloader } from "./components/Preloader";
-import { Cursor } from "./components/Cursor";
+import { malchin, safepath } from "@/data/portfolio";
+import { Sky } from "./components/Sky";
+import { Countdown } from "./components/Countdown";
+import { Altimeter } from "./components/Altimeter";
 import { Nav } from "./components/Nav";
-import { Hero } from "./components/sections/Hero";
-import { Marquee } from "./components/sections/Marquee";
+import { Planet } from "./components/Planet";
+import { Launch } from "./components/sections/Launch";
 import { About } from "./components/sections/About";
-import { Projects } from "./components/sections/Projects";
-import { Stack } from "./components/sections/Stack";
-import { Featured } from "./components/sections/Featured";
-import { Hardware } from "./components/sections/Hardware";
-import { Contributions } from "./components/sections/Contributions";
-import { Experience } from "./components/sections/Experience";
-import { Contact } from "./components/sections/Contact";
+import { Orbit } from "./components/sections/Orbit";
+import { Moon } from "./components/sections/Moon";
+import { Mission } from "./components/sections/Mission";
+import { Belt } from "./components/sections/Belt";
+import { Europa } from "./components/sections/Europa";
+import { DeepField } from "./components/sections/DeepField";
+import { Signal } from "./components/sections/Signal";
 import "./index.css";
 
 export function App() {
-  const main = useRef<HTMLElement>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -35,49 +36,29 @@ export function App() {
     ScrollTrigger.refresh();
   }, [ready]);
 
-  // Section бүр өөрийн өнгөтэй — скроллоор body-ийн өнгө зөөлөн шилжинэ
-  useGSAP(
-    () => {
-      const root = document.documentElement;
-      gsap.utils.toArray<HTMLElement>("[data-bg]").forEach(section => {
-        const apply = () =>
-          gsap.to(root, {
-            "--bg": section.dataset.bg,
-            "--fg": section.dataset.fg,
-            duration: 0.9,
-            ease: "power2.out",
-            overwrite: "auto",
-          });
-        ScrollTrigger.create({
-          trigger: section,
-          start: "top 55%",
-          end: "bottom 55%",
-          onEnter: apply,
-          onEnterBack: apply,
-        });
-      });
-    },
-    { scope: main },
-  );
-
   return (
     <>
-      <Preloader onReveal={() => setReady(true)} />
-      <Cursor />
+      <Sky />
+      <Countdown onLiftoff={() => setReady(true)} />
       <Nav />
-      <main ref={main} className="relative">
-        <Hero ready={ready} />
-        <Marquee />
+      <Altimeter />
+      <main className="relative">
+        <Launch ready={ready} />
         <About />
-        <Stack />
-        <Featured />
-        <Hardware />
-        <Projects />
-        <Contributions />
-        <Experience />
-        <Contact />
+        <Orbit />
+        <Moon />
+        <Mission id="mars" mission={malchin} planet={<Planet kind="mars" className="w-[min(80%,520px)]" />} />
+        <Belt />
+        <Europa />
+        <Mission
+          id="saturn"
+          mission={safepath}
+          flip
+          planet={<Planet kind="saturn" className="w-[min(52%,340px)]" />}
+        />
+        <DeepField />
+        <Signal />
       </main>
-      <div className="grain" aria-hidden />
     </>
   );
 }
