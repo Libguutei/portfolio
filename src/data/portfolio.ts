@@ -44,6 +44,8 @@ export interface Mission {
   event: string;
   tagline: string;
   description: string;
+  /** Миний хийсэн хэсэг — нэг мөрөөр */
+  part: string;
   role: string[];
   stack: string[];
   facts: { value: string; label: string }[];
@@ -87,9 +89,9 @@ export const profile: Profile = {
   email: "hello@example.com",
   github: "Libguutei",
   intro:
-    "I'm a 20-year-old junior developer from Ulaanbaatar with a year of hands-on work. Scroll to lift off — this page climbs from my city's blue sky out to the projects I've launched.",
+    "Junior developer, 20, one year in. Scroll to lift off and fly past the projects I've launched.",
   about:
-    "I build full-stack apps with React, Next.js and TypeScript, wire them to real databases, and recently took my code down to the metal with an ESP32 water coaster. I like problems you can hold in your hand.",
+    "I build full-stack apps with React, Next.js and TypeScript, and lately the hardware they talk to.",
 };
 
 /** Аяллын дараалал — DOM дахь section-уудын id-тай таарна */
@@ -100,6 +102,7 @@ export const stops: Stop[] = [
   { id: "moon", place: "The Moon", km: 384_400 },
   { id: "mars", place: "Mars", km: 225_000_000 },
   { id: "belt", place: "Asteroid belt", km: 350_000_000 },
+  { id: "rocks", place: "Deeper in the belt", km: 420_000_000 },
   { id: "europa", place: "Europa", km: 628_000_000 },
   { id: "saturn", place: "Saturn", km: 1_270_000_000 },
   { id: "deep", place: "Deep field", km: 4_500_000_000 },
@@ -167,7 +170,8 @@ export const malchin: Mission = {
   event: "Team game, summer 2026",
   tagline: "Нүүдэлчин: survive the steppe.",
   description:
-    "A Mongolian herder survival game in the browser. Raise five kinds of livestock, live through the seasons, fight wolves and spirits, and bring your family home.",
+    "A Mongolian herder survival game in the browser: raise livestock, survive the seasons, bring your family home.",
+  part: "Combat mechanics, seeded terrain and the elder's dialogue.",
   role: [
     "Combat mechanics wired into the player and livestock modules",
     "Seeded procedural terrain",
@@ -192,7 +196,8 @@ export const vesta: Mission = {
   event: "Pinecone intern program, September 2026",
   tagline: "See it on before you buy it.",
   description:
-    "An AI fashion platform: 3D outfit models made from real photos, an AI wardrobe, 2D virtual try-on and swipe-to-style recommendations. Named, like this stop, after the brightest asteroid in the belt.",
+    "An AI fashion platform with 3D outfit models, an AI wardrobe and virtual try-on. Named, like this stop, after the brightest asteroid in the belt.",
+  part: "The 2D try-on studio, AI wardrobe uploads and swipe-to-style.",
   role: [
     "2D outfit viewer and try-on studio with a clothing carousel",
     "AI wardrobe with category-aware uploads, garment recognition and background removal",
@@ -213,7 +218,8 @@ export const safepath: Mission = {
   event: "PineQuest S5, episode 1",
   tagline: "Get kids home safely.",
   description:
-    "A child-safety app for parents and kids: live location sharing, safe zones drawn as rings on the map, camera navigation with AI scene recognition, and routing that still works offline.",
+    "A child-safety app: live location, safe zones drawn as rings on the map, and routing that still works offline.",
+  part: "Parent alerts, safe zones, offline routing and a kids' AI buddy.",
   role: [
     "Parent alerts for low battery, lost connection and surroundings photos",
     "Safe zones: tap a point, set a radius, the name fills itself in",
@@ -238,7 +244,8 @@ export const dusal: HardwareProject = {
   event: "PineQuest S5, episode 2",
   tagline: "A coaster that counts every sip.",
   description:
-    "Put any cup on the coaster. It weighs the water, counts each sip by itself and sends it to your phone over Bluetooth, no Wi-Fi needed. Europa hides an ocean under its ice; this one hides a load cell under a cup.",
+    "Put any cup on the coaster and it counts every sip, then tells your phone over Bluetooth. Europa hides an ocean under its ice; this hides a load cell under a cup.",
+  part: "Sip detection on the ESP32, the Bluetooth link and the app's animated UI.",
   role: [
     "Sip detection that counts from 5 ml, senses 2 g and measures in about 1.7 s",
     "Stable readings: averages four samples once the cup settles",
