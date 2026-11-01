@@ -2,29 +2,38 @@
 @import "lenis/dist/lenis.css";
 
 @theme {
-  --font-display: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
-  --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Unbounded", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Onest", ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #f4f6ff;
+  --color-dawn: #ffc46b;
+  --color-sky: #3d7bff;
+  --color-haze: #bfe3ff;
+  --color-space: #04050d;
 }
 
+/* Тэнгэрийн өнгө scroll-оор өөрчлөгдөнө (Sky.tsx) */
 :root {
-  --bg: #0b0b0c;
-  --fg: #f1ede4;
-  --accent: #d4ff3a;
+  --sky-top: #2f6cf6;
+  --sky-bottom: #bfe3ff;
+  --stars: 0;
+  --sun: 1;
 }
 
 html {
-  background: var(--bg);
+  background: #04050d;
 }
 
 body {
   margin: 0;
   min-width: 320px;
-  background: var(--bg);
-  color: var(--fg);
+  background: transparent;
+  color: var(--color-ink);
   font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
+  font-variant-numeric: tabular-nums;
 }
 
 main {
@@ -32,8 +41,8 @@ main {
 }
 
 ::selection {
-  background: var(--accent);
-  color: #0b0b0c;
+  background: var(--color-dawn);
+  color: #04050d;
 }
 
 html.is-locked,
@@ -45,292 +54,268 @@ button {
   cursor: pointer;
 }
 
-/* ---------- Custom cursor ---------- */
-html.has-cursor,
-html.has-cursor * {
-  cursor: none !important;
+:focus-visible {
+  outline: 2px solid var(--color-dawn);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
-.cursor-dot,
-.cursor-ring {
+.measure {
+  max-width: 34rem;
+}
+
+/* ---------- Тэнгэр ба одод ---------- */
+.sky {
   position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 200;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(to bottom, var(--sky-top), var(--sky-bottom));
+}
+
+.sky-sun {
+  position: absolute;
+  right: 12vw;
+  top: 14vh;
+  width: 36vmin;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgb(255 236 200 / 0.95), rgb(255 196 107 / 0.35) 35%, transparent 70%);
+  opacity: var(--sun);
+}
+
+.stars {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
   pointer-events: none;
+  opacity: var(--stars);
+}
+
+/* ---------- Үүл ---------- */
+.cloud {
+  position: absolute;
   border-radius: 9999px;
+  background:
+    radial-gradient(closest-side, rgb(255 255 255 / 0.95), rgb(255 255 255 / 0)) 0 40% / 45% 90% no-repeat,
+    radial-gradient(closest-side, rgb(255 255 255 / 0.9), rgb(255 255 255 / 0)) 35% 0 / 50% 100% no-repeat,
+    radial-gradient(closest-side, rgb(255 255 255 / 0.85), rgb(255 255 255 / 0)) 100% 50% / 50% 85% no-repeat;
+  filter: blur(2px);
+  animation: drift linear infinite alternate;
 }
 
-.cursor-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-  mix-blend-mode: difference;
+@keyframes drift {
+  from {
+    translate: -8vw 0;
+  }
+  to {
+    translate: 8vw 0;
+  }
 }
 
-.cursor-ring {
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  mix-blend-mode: difference;
-}
-
-.cursor-ring span {
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #0b0b0c;
-  opacity: 0;
-  transform: scale(0.4);
-  transition:
-    opacity 0.3s,
-    transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-.cursor-ring:has(span.is-visible) {
-  mix-blend-mode: normal;
-}
-
-.cursor-ring span.is-visible {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* ---------- Roll text hover ---------- */
-.roll {
-  display: inline-flex;
-  white-space: nowrap;
-}
-
-.roll-char {
-  display: inline-block;
-  overflow: hidden;
-  line-height: 1.1;
-  vertical-align: bottom;
-}
-
-.roll-char > span {
-  display: inline-block;
+/* ---------- Гарагууд ---------- */
+.planet {
   position: relative;
-  transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-  transition-delay: calc(var(--i) * 18ms);
-}
-
-.roll-char > span::after {
-  content: attr(data-ch);
-  position: absolute;
-  left: 0;
-  top: 100%;
-}
-
-:is(a, button):hover .roll-char > span {
-  transform: translateY(-100%);
-}
-
-/* ---------- Hero ---------- */
-.blob {
-  position: absolute;
+  aspect-ratio: 1;
   border-radius: 9999px;
-  filter: blur(70px);
-  opacity: 0.55;
-  will-change: transform;
+  overflow: hidden;
 }
 
-.blob-a {
-  width: 46vw;
-  height: 46vw;
-  left: -8vw;
-  top: -10vw;
-  background: radial-gradient(circle at 30% 30%, #6b5bff, transparent 65%);
-  animation: float-a 14s ease-in-out infinite alternate;
+.planet::after {
+  /* Нар зүүн дээрээс тусна — сүүдрийн тал */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 32% 28%, transparent 38%, rgb(2 3 10 / 0.55) 62%, rgb(2 3 10 / 0.92) 80%);
+  pointer-events: none;
 }
 
-.blob-b {
-  width: 38vw;
-  height: 38vw;
-  right: -6vw;
-  top: 18vh;
-  background: radial-gradient(circle at 50% 50%, #ff5b2e, transparent 65%);
-  animation: float-b 18s ease-in-out infinite alternate;
+.planet-surface {
+  position: absolute;
+  inset: 0;
+  background-size: 200% 100%;
+  animation: spin-surface 60s linear infinite;
 }
 
-.blob-c {
-  width: 30vw;
-  height: 30vw;
-  left: 34vw;
-  bottom: -12vw;
-  background: radial-gradient(circle at 50% 50%, #d4ff3a, transparent 65%);
-  opacity: 0.35;
-  animation: float-a 20s ease-in-out infinite alternate-reverse;
-}
-
-@keyframes float-a {
+@keyframes spin-surface {
   to {
-    translate: 6vw 8vh;
-    scale: 1.2;
+    background-position: -200% 0;
   }
 }
 
-@keyframes float-b {
-  to {
-    translate: -8vw -6vh;
-    scale: 0.85;
-  }
+.planet-earth {
+  box-shadow: 0 0 80px 10px rgb(90 160 255 / 0.45);
 }
 
-.badge-rotate {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: spin 16s linear infinite;
+.planet-earth .planet-surface {
+  background:
+    radial-gradient(ellipse 18% 12% at 20% 40%, #3f9d5a 60%, transparent 62%),
+    radial-gradient(ellipse 14% 20% at 55% 55%, #4caf63 60%, transparent 62%),
+    radial-gradient(ellipse 10% 8% at 80% 30%, #3f9d5a 60%, transparent 62%),
+    radial-gradient(ellipse 22% 6% at 40% 22%, rgb(255 255 255 / 0.8) 50%, transparent 60%),
+    radial-gradient(ellipse 20% 5% at 75% 70%, rgb(255 255 255 / 0.7) 50%, transparent 60%),
+    linear-gradient(#1e5fd6, #2a78e8);
+  background-size: 200% 100%;
 }
 
-@keyframes spin {
+.planet-moon .planet-surface {
+  background:
+    radial-gradient(circle at 30% 35%, #8e8e96 0 6%, transparent 7%),
+    radial-gradient(circle at 62% 58%, #85858d 0 9%, transparent 10%),
+    radial-gradient(circle at 45% 75%, #8a8a92 0 4%, transparent 5%),
+    radial-gradient(circle at 72% 25%, #8b8b93 0 5%, transparent 6%),
+    radial-gradient(ellipse 30% 22% at 40% 45%, #9b9ba3 50%, transparent 52%),
+    linear-gradient(#c9c9cf, #b4b4bc);
+  background-size: 200% 100%;
+}
+
+.planet-mars .planet-surface {
+  background:
+    radial-gradient(ellipse 30% 8% at 50% 4%, #fff3ea 60%, transparent 62%),
+    radial-gradient(ellipse 26% 10% at 30% 45%, #8a3418 55%, transparent 60%),
+    radial-gradient(ellipse 18% 14% at 70% 62%, #7a2c14 55%, transparent 60%),
+    radial-gradient(ellipse 34% 6% at 55% 30%, #a8441f 55%, transparent 60%),
+    linear-gradient(#d0643a, #b84f2a);
+  background-size: 200% 100%;
+}
+
+.planet-europa .planet-surface {
+  background:
+    repeating-linear-gradient(28deg, transparent 0 18px, rgb(150 90 50 / 0.45) 18px 20px, transparent 20px 44px),
+    repeating-linear-gradient(-36deg, transparent 0 26px, rgb(150 90 50 / 0.35) 26px 27px, transparent 27px 60px),
+    linear-gradient(#f2ead9, #d9cdb5);
+  background-size: 200% 100%;
+}
+
+.planet-jupiter .planet-surface {
+  background:
+    radial-gradient(ellipse 12% 7% at 62% 64%, #c4512e 60%, transparent 64%),
+    linear-gradient(
+      #e9d6b8 0 12%,
+      #c89a6d 12% 20%,
+      #f0e2c8 20% 30%,
+      #b9835a 30% 38%,
+      #ecd8b6 38% 50%,
+      #a8714b 50% 56%,
+      #f1e3c9 56% 70%,
+      #c49067 70% 80%,
+      #e6d2b0 80% 100%
+    );
+  background-size: 200% 100%;
+  animation-duration: 40s;
+}
+
+.planet-saturn .planet-surface {
+  background: linear-gradient(
+    #f3e2b8 0 16%,
+    #e3c88f 16% 26%,
+    #f6e8c4 26% 42%,
+    #d9b97e 42% 50%,
+    #f2dfb2 50% 66%,
+    #dcc08a 66% 76%,
+    #efdcae 76% 100%
+  );
+  background-size: 200% 100%;
+}
+
+.saturn {
+  position: relative;
+  aspect-ratio: 1;
+}
+
+.saturn-ring {
+  position: absolute;
+  left: -40%;
+  right: -40%;
+  top: 50%;
+  aspect-ratio: 1;
+  translate: 0 -50%;
+  border-radius: 9999px;
+  transform: rotateX(76deg) rotateY(-12deg);
+  background: radial-gradient(
+    circle,
+    transparent 0 44%,
+    rgb(214 190 140 / 0.55) 45% 52%,
+    transparent 52.5% 54%,
+    rgb(232 210 160 / 0.75) 54.5% 63%,
+    rgb(190 165 120 / 0.4) 63.5% 68%,
+    transparent 69%
+  );
+}
+
+.saturn-ring-front {
+  clip-path: inset(50% 0 0 0);
+  z-index: 2;
+}
+
+.vesta-rock {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 46% 54% 42% 58% / 55% 44% 56% 45%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 58% 40%, #7d6f60 0 13%, #8f806f 14%, transparent 22%),
+    radial-gradient(circle at 30% 66%, #85776a 0 8%, transparent 12%),
+    radial-gradient(circle at 70% 75%, #8a7c6e 0 6%, transparent 9%),
+    linear-gradient(140deg, #cdbba3, #9c8a76);
+  animation: tumble 80s linear infinite;
+}
+
+.vesta-rock::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 25%, transparent 30%, rgb(2 3 10 / 0.7) 78%);
+}
+
+.rock {
+  display: inline-block;
+  flex: none;
+  width: 26px;
+  aspect-ratio: 1.2;
+  border-radius: 46% 54% 40% 60% / 58% 42% 58% 42%;
+  background: linear-gradient(140deg, #b9a892, #6f6152);
+  animation: bob 6s ease-in-out infinite;
+}
+
+@keyframes tumble {
   to {
     rotate: 360deg;
   }
 }
 
-/* ---------- Marquee ---------- */
-.text-outline {
-  color: transparent;
-  -webkit-text-stroke: 1.5px #f1ede4;
+@keyframes bob {
+  50% {
+    translate: 0 -6px;
+    rotate: 14deg;
+  }
 }
 
-.text-outline:nth-child(even) {
-  color: #f1ede4;
-  -webkit-text-stroke: 0;
-}
-
-/* ---------- About photo (generative) ---------- */
-.photo-art {
-  background:
-    radial-gradient(circle at 20% 25%, #ff5b2e 0 18%, transparent 19%),
-    radial-gradient(circle at 80% 70%, #6b5bff 0 24%, transparent 25%),
-    conic-gradient(from 120deg at 60% 40%, #d4ff3a, #f6c1ff, #ffb347, #d4ff3a);
-}
-
-.photo-art::after {
-  content: "";
+/* ---------- Тойрог зам ---------- */
+.orbit-ring {
   position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(90deg, transparent 0 22px, rgb(11 11 12 / 0.08) 22px 23px);
-}
-
-/* ---------- Project cards ---------- */
-.pj-tilt {
-  transform-style: preserve-3d;
-  will-change: transform;
-  box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.6);
-}
-
-.pj-art {
-  background:
-    radial-gradient(circle at 30% 20%, var(--c2), transparent 50%),
-    linear-gradient(140deg, var(--c1), var(--c3) 85%);
-}
-
-.pj-orb {
-  position: absolute;
+  left: 50%;
+  top: 50%;
+  border: 1px dashed rgb(244 246 255 / 0.22);
   border-radius: 9999px;
-  mix-blend-mode: overlay;
+  translate: -50% -50%;
+  animation: tumble linear infinite;
 }
 
-.pj-orb-1 {
-  width: 60%;
-  aspect-ratio: 1;
-  right: 8%;
-  top: 6%;
-  background: radial-gradient(circle at 35% 35%, #fff, var(--c2) 40%, transparent 70%);
-  animation: orb 9s ease-in-out infinite alternate;
-}
-
-.pj-orb-2 {
-  width: 30%;
-  aspect-ratio: 1;
-  left: 22%;
-  bottom: 12%;
-  background: var(--c3);
-  mix-blend-mode: multiply;
-  animation: orb 7s ease-in-out infinite alternate-reverse;
-}
-
-@keyframes orb {
-  to {
-    translate: -14% 18%;
-    scale: 1.15;
-  }
-}
-
-.pj-rings {
+.orbit-ring > .sat {
   position: absolute;
-  inset: 0;
-  background: repeating-radial-gradient(circle at 70% 30%, transparent 0 28px, rgb(255 255 255 / 0.12) 29px 30px);
-  transition: scale 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+  left: 50%;
+  top: 0;
+  translate: -50% -50%;
 }
 
-.pj-tilt:hover .pj-rings {
-  scale: 1.25;
+.orbit-ring > .sat > span {
+  display: block;
+  animation: tumble linear infinite reverse;
+  animation-duration: inherit;
 }
 
-.pj-num {
-  color: transparent;
-  -webkit-text-stroke: 2px rgb(255 255 255 / 0.85);
-  mix-blend-mode: overlay;
-}
-
-.pj-shine {
-  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgb(255 255 255 / 0.35), transparent 45%);
-  opacity: 0;
-  transition: opacity 0.4s;
-}
-
-.pj-tilt:hover .pj-shine {
-  opacity: 1;
-}
-
-/* ---------- Contact ---------- */
-.ct-hover {
-  transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), color 0.3s;
-}
-
-.ct-headline span:hover > .ct-hover {
-  color: #ff5b2e;
-}
-
-/* ---------- Film grain ---------- */
-.grain {
-  position: fixed;
-  inset: -50%;
-  z-index: 90;
-  pointer-events: none;
-  opacity: 0.07;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation: grain 1s steps(6) infinite;
-}
-
-@keyframes grain {
-  0% { transform: translate(0, 0); }
-  20% { transform: translate(-5%, 3%); }
-  40% { transform: translate(4%, -6%); }
-  60% { transform: translate(-3%, 5%); }
-  80% { transform: translate(6%, 2%); }
-  100% { transform: translate(-2%, -4%); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  ::before,
-  ::after {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-
-/* ---------- Hardware: water + BLE ---------- */
+/* ---------- Coaster (Дусал) ---------- */
 .wave {
   position: absolute;
   left: 0;
@@ -340,7 +325,7 @@ html.has-cursor * {
 }
 
 .wave path {
-  fill: #3fb4ff;
+  fill: #5fb6ff;
 }
 
 .wave-back {
@@ -383,33 +368,10 @@ html.has-cursor * {
   }
 }
 
-.ble-wave {
-  display: block;
-  border: 2px solid #5ec8ff;
-  border-left-color: transparent;
-  border-bottom-color: transparent;
-  border-radius: 9999px;
-  rotate: 45deg;
-  opacity: 0;
-  animation: ble 1.8s ease-out infinite;
-}
-
-@keyframes ble {
-  0% {
-    opacity: 0;
-  }
-  40% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-/* ---------- GitHub contributions ---------- */
+/* ---------- Гүн сансар: contribution одод ---------- */
 .gh-grid {
-  --gap: 4px;
-  --cell: clamp(10px, calc((100vw - 15rem) / 53 - var(--gap)), 20px);
+  --gap: 5px;
+  --cell: clamp(9px, calc((100vw - 15rem) / 53 - var(--gap)), 18px);
 }
 
 .gh-size {
@@ -424,151 +386,54 @@ html.has-cursor * {
   }
 }
 
-/* ---------- Featured visuals ---------- */
-.vesta-ring {
-  transform-style: preserve-3d;
-  animation: vesta-spin 22s linear infinite;
+/* ---------- Дохио ---------- */
+.signal-ring {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgb(255 196 107 / 0.6);
+  border-radius: 9999px;
+  animation: signal 3.6s ease-out infinite;
 }
 
-.vesta-ring > * {
-  transform-style: preserve-3d;
-}
-
-@keyframes vesta-spin {
+@keyframes signal {
   from {
-    transform: rotateX(-8deg) rotateY(0deg);
+    scale: 0.2;
+    opacity: 1;
   }
   to {
-    transform: rotateX(-8deg) rotateY(-360deg);
-  }
-}
-
-.vesta-chip {
-  animation: chip-bob 3s ease-in-out infinite;
-}
-
-@keyframes chip-bob {
-  50% {
-    translate: 0 -8px;
-  }
-}
-
-.route-draw {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: route-draw 6s ease-in-out infinite;
-}
-
-@keyframes route-draw {
-  60%,
-  100% {
-    stroke-dashoffset: 0;
-  }
-}
-
-
-.safe-zone {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: safe-zone 2.4s ease-out infinite;
-}
-
-@keyframes safe-zone {
-  from {
-    scale: 0.6;
-    opacity: 0.6;
-  }
-  to {
-    scale: 1.8;
+    scale: 1;
     opacity: 0;
   }
 }
 
-.mc-star {
-  animation: twinkle 2.4s ease-in-out infinite;
-}
-
-@keyframes twinkle {
-  50% {
-    opacity: 0.2;
-  }
-}
-
-.mc-smoke {
-  animation: smoke 3s ease-out infinite;
-}
-
-@keyframes smoke {
-  to {
-    translate: 6px -18px;
-    opacity: 0;
-  }
-}
-
-.mc-sheep {
-  position: absolute;
-  left: -12%;
-  width: 34px;
-  height: 22px;
-  border-radius: 45% 45% 40% 40%;
-  background: #fff4e0;
-  box-shadow: inset -4px -3px 0 rgb(0 0 0 / 0.12);
-  animation: sheep-walk 12s linear infinite;
-}
-
-.mc-sheep::before,
-.mc-sheep::after {
-  content: "";
-  position: absolute;
-  bottom: -6px;
-  width: 4px;
-  height: 7px;
-  background: #2a2a2a;
-  animation: sheep-legs 0.4s steps(2) infinite;
-}
-
-.mc-sheep::before {
-  left: 7px;
-}
-
-.mc-sheep::after {
-  right: 9px;
-  animation-delay: 0.2s;
-}
-
-.mc-sheep > span {
-  position: absolute;
-  right: -9px;
-  top: 2px;
-  width: 13px;
-  height: 11px;
-  border-radius: 40%;
-  background: #2a2a2a;
-}
-
-@keyframes sheep-walk {
-  0% {
-    left: -12%;
-  }
-  100% {
-    left: 110%;
-  }
-}
-
-@keyframes sheep-legs {
-  50% {
-    height: 4px;
-  }
-}
-
-/* ---------- Device frames ---------- */
+/* ---------- Төхөөрөмжийн хүрээ ---------- */
 .device-phone,
 .device-browser {
-  transition: rotate 0.8s cubic-bezier(0.19, 1, 0.22, 1), scale 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+  transition:
+    rotate 0.8s cubic-bezier(0.19, 1, 0.22, 1),
+    scale 0.8s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .device-phone:hover,
 .device-browser:hover {
   rotate: 0deg;
   scale: 1.04;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@keyframes scroll-cue {
+  from {
+    translate: 0 -100%;
+  }
+  to {
+    translate: 0 200%;
+  }
 }
