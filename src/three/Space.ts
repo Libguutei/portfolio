@@ -24,14 +24,20 @@ interface Body {
   near: number;
   /** Дэлгэцийн байрлалаас доош шилжүүлэх (дэлхийн муруйд) */
   drop: number;
-  /** Дэлгэцийн өндрийн энэ хувиас дээш гарахгүй — дээш нисэхэд доор хоцорно */
-  pinY?: number;
-  /** Хэсгийн хоёрдугаар хагаст алс руу холдоно */
+  /** Хэсгийн төгсгөлд доошоо живж алс руу холдоно */
   recede?: boolean;
   tick?: (dt: number, p: number) => void;
 }
 
 const STAR_COUNT = 1800;
+const EARTH_R = 13;
+/** Stack-ийн 4 бүлгийн тойрог зам: хазайлт ба эргэх хурд (ээлжлэн эсрэг чиглэлд) */
+const RINGS = [
+  { tiltX: 0.32, tiltZ: 0.18, speed: 0.13 },
+  { tiltX: 0.55, tiltZ: -0.38, speed: -0.1 },
+  { tiltX: 0.22, tiltZ: 0.52, speed: 0.08 },
+  { tiltX: 0.7, tiltZ: -0.12, speed: -0.06 },
+];
 const BOX = { x: 90, y: 55, zFar: -280, zNear: -14 };
 
 const smooth = (t: number) => t * t * (3 - 2 * t);
@@ -52,7 +58,7 @@ export class Space {
   private streaks!: THREE.LineSegments;
   private starPos!: Float32Array;
   private streakPos!: Float32Array;
-  private satellites: { mesh: THREE.Object3D; label: HTMLElement | null }[] = [];
+  private satellites: { mesh: THREE.Object3D; label: HTMLElement; ring: number; phase: number; local: THREE.Vector3 }[] = [];
   private pointer = { x: 0, y: 0, tx: 0, ty: 0 };
   /** Дэлхий ойрхон байх үед л дагуулын шошго харагдана */
   private labelsOn = false;
@@ -193,32 +199,43 @@ export class Space {
     const body: Body = { group, spin: [], far: 80, near: 20, drop: 0 };
 
     if (kind === "earth") {
-      const R = 16;
+      const R = EARTH_R;
+      const tilted = new THREE.Group();
+      tilted.rotation.z = 0.25;
       const earth = this.sphere(R, earthTexture(), 128);
       const clouds = new THREE.Mesh(
         new THREE.SphereGeometry(R * 1.012, 128, 64),
         new THREE.MeshStandardMaterial({ map: cloudTexture(), transparent: true, depthWrite: false }),
       );
-      group.add(earth, clouds, this.atmosphere(R * 1.05, 0x5aa8ff, 2.4));
-      group.rotation.z = 0.25;
+      tilted.add(earth, clouds);
+      group.add(tilted, this.atmosphere(R * 1.05, 0x5aa8ff, 2.4));
       body.spin.push([earth, 0.02], [clouds, 0.032]);
-      Object.assign(body, { far: 70, near: 36, drop: R * 0.3, pinY: 0.58, recede: true });
+      Object.assign(body, { far: 90, near: 42, recede: true });
 
-      // Stack-ийн 4 дагуул тойрог замаар эргэнэ
-      const labels = Array.from(document.querySelectorAll<HTMLElement>("[data-sat]"));
-      for (let i = 0; i < 4; i++) {
+      // Tech stack бүр нэг дагуул: бүлэг бүр өөрийн хазайсан тойрог замтай
+      const rings = RINGS.map(r => new THREE.Quaternion().setFromEuler(new THREE.Euler(r.tiltX, 0, r.tiltZ)));
+      document.querySelectorAll<HTMLElement>("[data-sat]").forEach(label => {
+        const ring = Number(label.dataset.ring ?? 0);
         const sat = this.satellite();
         group.add(sat);
-        this.satellites.push({ mesh: sat, label: labels[i] ?? null });
-      }
-      body.tick = dt => {
-        const t = this.clock.elapsedTime;
-        this.satellites.forEach((s, i) => {
-          const a = t * (0.16 - i * 0.025) + i * 1.7;
-          const r = R + 2.2 + i * 1.3;
-          s.mesh.position.set(Math.cos(a) * r, Math.sin(a * 0.9) * 1.2 + 2 + i * 0.6, Math.sin(a) * r);
-          s.mesh.rotation.y += dt * 0.6;
+        this.satellites.push({
+          mesh: sat,
+          label,
+          ring,
+          phase: (Number(label.dataset.slot ?? 0) / Number(label.dataset.count ?? 1)) * Math.PI * 2 + ring * 0.7,
+          local: new THREE.Vector3(),
         });
+      });
+      body.tick = dt => {
+        const t = this.reduced ? 0 : this.clock.elapsedTime;
+        for (const s of this.satellites) {
+          const cfg = RINGS[s.ring] ?? RINGS[0]!;
+          const a = s.phase + t * cfg.speed;
+          const r = R + 2.6 + s.ring * 1.9;
+          s.local.set(Math.cos(a) * r, 0, Math.sin(a) * r).applyQuaternion(rings[s.ring] ?? rings[0]!);
+          s.mesh.position.copy(s.local);
+          s.mesh.rotation.y += dt * 0.6;
+        }
       };
     }
 
@@ -383,26 +400,24 @@ export class Space {
       const scope = el.dataset.progress === "section" ? (el.closest("section") ?? el) : el;
       const r = scope.getBoundingClientRect();
       const p = (vh - r.top) / (vh + r.height);
-      // Дэлхий: хэсгийн эхэнд ойртож, ихэнх хугацаанд том байгаад, төгсгөлд нь холдоно
+      // Дэлхий: хэсгийн эхэнд ойртож, бараг бүх хугацаанд том байгаад, төгсгөлд нь доошоо живж холдоно
+      const leave = body.recede ? smooth(clamp01((p - 0.82) / 0.18)) : 0;
       const depth = body.recede
-        ? p < 0.72
-          ? THREE.MathUtils.lerp(body.far, body.near, smooth(clamp01(p / 0.4)))
-          : THREE.MathUtils.lerp(body.near, 220, smooth(clamp01((p - 0.72) / 0.28)))
+        ? leave > 0
+          ? THREE.MathUtils.lerp(body.near, 200, leave)
+          : THREE.MathUtils.lerp(body.far, body.near, smooth(clamp01(p / 0.22)))
         : THREE.MathUtils.lerp(body.far, body.near, smooth(clamp01(p * 1.25)));
 
       // Элементийн дэлгэц дээрх төвийг 3D орон зайд буулгана
-      let cy = rect.top + rect.height / 2;
-      if (body.pinY !== undefined) {
-        // Холдох үедээ доошоо живж дэлгэцээс гарна — бид дээшээ нисч байна
-        const sink = body.recede ? smooth(clamp01((p - 0.72) / 0.28)) * 0.6 : 0;
-        cy = Math.max(cy, vh * (body.pinY + sink));
-      }
+      // Холдох бие дээшээ гүйхгүй: дэлгэцийн голоос дээш гарахгүй, төгсгөлд доошоо живнэ
+      const centerY = rect.top + rect.height / 2;
+      const cy = (body.recede ? Math.max(centerY, vh * 0.5) : centerY) + leave * vh * 0.7;
       const ndcX = ((rect.left + rect.width / 2) / vw) * 2 - 1;
       const ndcY = -(cy / vh) * 2 + 1;
       this.tmp.set(ndcX, ndcY, 0.5).unproject(this.camera).sub(this.camera.position).normalize();
       body.group.position.copy(this.camera.position).addScaledVector(this.tmp, depth);
       body.group.position.y -= body.drop;
-      if (body.recede) this.labelsOn = depth < 55;
+      if (body.recede) this.labelsOn = depth < body.near + 10;
 
       for (const [obj, speed] of body.spin) obj.rotation.y += dt * speed * (this.reduced ? 0 : 1) + this.velocity * 0.0004;
       body.tick?.(dt, p);
@@ -420,13 +435,15 @@ export class Space {
         s.label.style.opacity = "0";
         continue;
       }
+      // Дэлхийн ард орвол далдлагдана, хажуугаар нь ард өнгөрөхдөө бүдэг харагдана
+      const back = s.local.z < 0;
+      const hidden = back && Math.hypot(s.local.x, s.local.y) < EARTH_R * 1.04;
       s.mesh.getWorldPosition(this.tmp);
-      const behind = s.mesh.position.z < -2;
       this.tmp.project(this.camera);
       const x = (this.tmp.x * 0.5 + 0.5) * vw;
       const y = (-this.tmp.y * 0.5 + 0.5) * vh;
-      s.label.style.transform = `translate3d(${x + 14}px, ${y - 12}px, 0)`;
-      s.label.style.opacity = behind || this.tmp.z > 1 ? "0" : "1";
+      s.label.style.transform = `translate3d(${x + 10}px, ${y - 10}px, 0) scale(${back ? 0.85 : 1})`;
+      s.label.style.opacity = hidden || this.tmp.z > 1 ? "0" : back ? "0.35" : "1";
     }
   }
 }
