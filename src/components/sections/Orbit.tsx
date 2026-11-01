@@ -2,42 +2,56 @@ import { stack } from "@/data/portfolio";
 import { StopLabel } from "../StopLabel";
 import { joinList } from "./Mission";
 
-/** 400 км: доор 3D дэлхий эргэлдэж, stack-ийн дөрвөн дагуул тойрог замаар нисэнэ */
+/** Тойрог зам бүрийн өнгө — шошгон дээрх цэг ба жагсаалтад ижил */
+export const RING_COLORS = ["#ffc46b", "#8fd3ff", "#ff8a5c", "#b9f5a0"];
+
+/** 400 км: баруун талд том 3D дэлхий, түүнийг тойрон tech stack бүр нэг дагуул болж нисэнэ */
 export function Orbit() {
   return (
-    <section id="orbit" className="relative px-5 pb-[70svh] pt-32 md:px-10">
-      <div className="relative z-10 md:w-1/2">
-        <StopLabel id="orbit" />
-        <h2 className="mt-10 font-display text-[clamp(2.2rem,5.5vw,5rem)] font-semibold leading-[1.02]">The stack in orbit</h2>
-        <p className="measure mt-6 text-ink/80">
-          Four groups of tools keep everything I build up here. Each satellite below carries one of them, and all of it comes
-          straight from the projects on my GitHub.
-        </p>
-        <dl className="mt-12 space-y-8">
-          {stack.map(g => (
-            <div key={g.title} className="measure border-t border-ink/20 pt-4">
-              <dt className="font-display text-lg font-semibold">{g.title}</dt>
-              <dd className="mt-1 text-ink/60">{g.note}</dd>
-              <dd className="mt-2">{joinList(g.items)}</dd>
-            </div>
-          ))}
-        </dl>
+    <section id="orbit" className="relative px-5 pb-40 pt-32 md:px-10">
+      <div className="grid gap-12 md:grid-cols-2">
+        <div className="relative z-10">
+          <StopLabel id="orbit" />
+          <h2 className="mt-10 font-display text-[clamp(2.2rem,5.5vw,5rem)] font-semibold leading-[1.02]">The stack in orbit</h2>
+          <p className="measure mt-6 text-ink/80">
+            Every satellite circling the Earth is one of the tools I build with. Four orbits, one for each part of the stack, all
+            taken from the projects on my GitHub.
+          </p>
+          <dl className="mt-12 space-y-8">
+            {stack.map((g, gi) => (
+              <div key={g.title} className="measure border-t border-ink/20 pt-4">
+                <dt className="flex items-center gap-3 font-display text-lg font-semibold">
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: RING_COLORS[gi] }} aria-hidden />
+                  {g.title}
+                </dt>
+                <dd className="mt-1 text-ink/60">{g.note}</dd>
+                <dd className="mt-2">{joinList(g.items)}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        {/* Дэлхий энэ хайрцгийн төвд — desktop дээр текст гүйх хооронд байрандаа тогтоно (three/Space.ts) */}
+        <div data-body="earth" data-progress="section" className="h-[80svh] md:sticky md:top-0 md:h-[100svh]" aria-hidden />
       </div>
 
-      {/* Дэлхий энэ цэгийн доор байрлана — 3D (three/Space.ts) */}
-      <div data-body="earth" data-progress="section" className="absolute bottom-0 left-0 right-0 h-[40svh] md:left-1/2" aria-hidden />
-
-      {/* Дагуулуудын шошго: Space.ts байрлалыг нь фрэйм бүрт шинэчилнэ */}
+      {/* Дагуул бүрийн шошго: Space.ts байрлалыг нь фрэйм бүрт шинэчилнэ */}
       <div className="pointer-events-none fixed inset-0 z-30 overflow-hidden" aria-hidden>
-        {stack.map((g, i) => (
-          <span
-            key={g.title}
-            data-sat={i}
-            className="absolute left-0 top-0 whitespace-nowrap rounded-full bg-space/70 px-3 py-1 text-sm opacity-0 backdrop-blur transition-opacity duration-300"
-          >
-            {g.title}
-          </span>
-        ))}
+        {stack.flatMap((g, gi) =>
+          g.items.map((item, i) => (
+            <span
+              key={`${g.title}-${item}`}
+              data-sat
+              data-ring={gi}
+              data-slot={i}
+              data-count={g.items.length}
+              className="absolute left-0 top-0 flex items-center gap-1.5 whitespace-nowrap rounded-full bg-space/75 px-2.5 py-0.5 text-xs opacity-0 backdrop-blur-sm md:text-sm"
+            >
+              <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: RING_COLORS[gi] }} />
+              {item}
+            </span>
+          )),
+        )}
       </div>
     </section>
   );
